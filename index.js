@@ -34,18 +34,38 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     Auth:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *         password:
+ *           type: string
+ *       required:
+ *         - email
+ *         - password
+ *       additionalProperties: false
+ */
+
+/**
+ * @swagger
  * /register/admin:
  *  post:
- *    summary: This api is used to admin login
- *    description: This api is used to admin login
+ *    summary: Register admin
+ *    description: This api is used to admin register
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#components/schemas/Auth'
  *    responses:
  *      200:
- *        description: To login admin
- *        content:
- *          application/json:
- *            schema:
- *              type
+ *        description: Register successfully
  */
+
 //register admin
 app.post("/register/admin", (req, res) => {
   const { email, password } = req.body;
@@ -69,6 +89,23 @@ app.post("/register/admin", (req, res) => {
   });
 });
 
+/**
+ * @swagger
+ * /register:
+ *  post:
+ *    summary: Register user
+ *    description: This api is used to user register
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#components/schemas/Auth'
+ *    responses:
+ *      200:
+ *        description: Register successfully
+ */
+
 //register user
 app.post("/register", (req, res) => {
   const { email, password } = req.body;
@@ -91,6 +128,23 @@ app.post("/register", (req, res) => {
       });
   });
 });
+
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: Login user
+ *     description: This API is used for user login
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Auth'
+ *     responses:
+ *       200:
+ *         description: Login successfully
+ */
 
 //login
 app.post("/login", async (req, res) => {
@@ -123,6 +177,17 @@ app.post("/login", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /logout:
+ *  post:
+ *    summary: Logout user
+ *    description: This api is used to clear cookie
+ *    responses:
+ *      200:
+ *        description: Logout Succesfully!
+ */
+
 //logout
 app.post("/logout", validateToken(), (req, res) => {
   // Hapus cookie 'access-token'
@@ -131,27 +196,42 @@ app.post("/logout", validateToken(), (req, res) => {
 });
 
 /**
+ * @swagger
  * components:
- *    schema:
- *      user:
+ *    schemas:
+ *      User:
+ *        type: object
+ *        properties:
+ *          id:
+ *            type: integer
+ *          email:
+ *            type: string
+ *          password:
+ *            type: string
+ *          role:
+ *            type: string
+ *            enum:
+ *              - admin
+ *              - user
  */
 
 /**
  * @swagger
  * /user:
- *  post:
+ *  get:
  *    summary: Get all data users
- *    description: This api is used get all data users
+ *    description: This api is used to get all data users
  *    responses:
  *      200:
- *        description: This api is used get all data users
+ *        description: Success response
  *        content:
  *          application/json:
  *            schema:
  *              type: array
  *              items:
- *                $ref: '#components/schema/User'
+ *                $ref: '#components/schemas/User'
  */
+
 //get all user
 app.get("/user", validateToken("admin"), (req, res) => {
   User.findAll()
@@ -162,6 +242,30 @@ app.get("/user", validateToken("admin"), (req, res) => {
       console.log(err);
     });
 });
+
+/**
+ * @swagger
+ * /profile/{id}:
+ *  get:
+ *    summary: Get data users
+ *    description: This api is used to get data user
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: Numeric ID required
+ *        schema:
+ *          type: integer
+ *    responses:
+ *      200:
+ *        description: Success response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#components/schemas/User'
+ */
 
 //get user
 app.get("/profile/:id", validateToken("user"), (req, res) => {
