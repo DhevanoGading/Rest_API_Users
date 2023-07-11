@@ -173,7 +173,7 @@ app.post("/login", async (req, res) => {
           secure: true,
         });
         // Atur header CORS di sisi server
-        res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+        res.header("Access-Control-Allow-Origin", "http://localhost:4200");
         res.header("Access-Control-Allow-Credentials", "true");
         res.json({
           message: "Logged in Succesfully!",
