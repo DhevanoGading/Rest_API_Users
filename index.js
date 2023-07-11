@@ -165,7 +165,16 @@ app.post("/login", async (req, res) => {
         const accessToken = generateTokens(user);
         res.cookie("access-token", accessToken, {
           maxAge: 24 * 60 * 60 * 1000,
+          // Set domain dan path sesuai kebutuhan Anda
+          domain: "localhost",
+          path: "/",
+          // Izinkan kredensial di CORS
+          sameSite: "none",
+          secure: true,
         });
+        // Atur header CORS di sisi server
+        res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+        res.header("Access-Control-Allow-Credentials", "true");
         res.json({
           message: "Logged in Succesfully!",
           user: {
