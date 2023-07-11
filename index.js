@@ -3,6 +3,7 @@ const app = express();
 const db = require("./models");
 const { User } = require("./models");
 const bcrypt = require("bcrypt");
+const cors = require("cors");
 
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
@@ -10,6 +11,7 @@ const swaggerUi = require("swagger-ui-express");
 const cookieParser = require("cookie-parser");
 const { generateTokens, validateToken } = require("./jwt");
 
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
