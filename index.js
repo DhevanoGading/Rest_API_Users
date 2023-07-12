@@ -244,7 +244,7 @@ app.post("/logout", validateToken(), (req, res) => {
  */
 
 //get all user
-app.get("/user", validateToken("admin"), (req, res) => {
+app.post("/user", validateToken("admin"), (req, res) => {
   const token = req.body.accessToken;
   User.findAll()
     .then((result) => {
@@ -280,7 +280,7 @@ app.get("/user", validateToken("admin"), (req, res) => {
  */
 
 //get user
-app.get("/profile/:id", validateToken(), (req, res) => {
+app.post("/profile/:id", validateToken(), (req, res) => {
   const { id } = req.params;
   const tokenUserId = req.user.id;
 
