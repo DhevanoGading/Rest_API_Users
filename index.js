@@ -163,7 +163,16 @@ app.post("/login", async (req, res) => {
         res.status(400).json({ error: "Invalid password!" });
       } else {
         const accessToken = generateTokens(user);
-        res.cookie("access-token", accessToken, {
+        // res.cookie("access-token", accessToken, {
+        //   maxAge: 24 * 60 * 60 * 1000,
+        //   // Set domain dan path sesuai kebutuhan Anda
+        //   domain: "localhost",
+        //   path: "/",
+        //   // Izinkan kredensial di CORS
+        //   sameSite: "none",
+        //   secure: true,
+        // });
+        const cookieOptions = {
           maxAge: 24 * 60 * 60 * 1000,
           // Set domain dan path sesuai kebutuhan Anda
           domain: "localhost",
@@ -171,10 +180,11 @@ app.post("/login", async (req, res) => {
           // Izinkan kredensial di CORS
           sameSite: "none",
           secure: true,
-        });
-        // Atur header CORS di sisi server
-        res.header("Access-Control-Allow-Origin", "http://localhost:4200");
-        res.header("Access-Control-Allow-Credentials", "true");
+        };
+        res.setHeader(
+          "Set-Cookie",
+          serialize("access-token", accessToken, cookieOptions)
+        );
         res.json({
           message: "Logged in Succesfully!",
           user: {
