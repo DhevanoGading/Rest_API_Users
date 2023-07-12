@@ -14,7 +14,7 @@ const generateTokens = (user) => {
 };
 
 const validateToken = (requiredRole) => (req, res, next) => {
-  const accessToken = req.cookies["access-token"];
+  const accessToken = req.cookies["accessToken"];
 
   if (!accessToken)
     return res.status(400).json({ error: "User not Autenticated!" });

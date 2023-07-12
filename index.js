@@ -164,7 +164,7 @@ app.post("/login", async (req, res) => {
         res.status(400).json({ error: "Invalid password!" });
       } else {
         const accessToken = generateTokens(user);
-        res.cookie("access-token", accessToken, {
+        res.cookie("accessToken", accessToken, {
           maxAge: 24 * 60 * 60 * 1000,
           // Set domain dan path sesuai kebutuhan Anda
           domain: "localhost",
@@ -180,7 +180,7 @@ app.post("/login", async (req, res) => {
             email: user.email,
             role: user.role,
           },
-          "access-token": accessToken,
+          accessToken,
         });
       }
     });
@@ -201,7 +201,7 @@ app.post("/login", async (req, res) => {
 //logout
 app.post("/logout", validateToken(), (req, res) => {
   // Hapus cookie 'access-token'
-  res.clearCookie("access-token");
+  res.clearCookie("accessToken");
   res.json({ message: "Logged out successfully" });
 });
 
