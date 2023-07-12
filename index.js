@@ -173,19 +173,6 @@ app.post("/login", async (req, res) => {
           sameSite: "none",
           secure: true,
         });
-        // const cookieOptions = {
-        //   maxAge: 24 * 60 * 60 * 1000,
-        //   // Set domain dan path sesuai kebutuhan Anda
-        //   domain: "localhost",
-        //   path: "/login",
-        //   // Izinkan kredensial di CORS
-        //   sameSite: "none",
-        //   secure: true,
-        // };
-        // res.setHeader(
-        //   "Set-Cookie",
-        //   serialize("access-token", accessToken, cookieOptions)
-        // );
         res.json({
           message: "Logged in Succesfully!",
           user: {
@@ -193,7 +180,7 @@ app.post("/login", async (req, res) => {
             email: user.email,
             role: user.role,
           },
-          accessToken,
+          "access-token": accessToken,
         });
       }
     });
