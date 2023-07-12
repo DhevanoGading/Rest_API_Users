@@ -32,7 +32,7 @@ const option = {
     },
     servers: [
       {
-        url: "http://localhost:3000/",
+        url: "http://localhost:3001/",
       },
     ],
   },
@@ -181,7 +181,6 @@ app.post("/login", async (req, res) => {
             email: user.email,
             role: user.role,
           },
-          accessToken,
         });
       }
     });
@@ -302,7 +301,7 @@ app.post("/profile/:id", validateToken(), (req, res) => {
 });
 
 db.sequelize.sync().then((req) => {
-  app.listen(3000, () => {
-    console.log(`Server listening at http://localhost:3000`);
+  app.listen(3001, () => {
+    console.log(`Server listening at http://localhost:3001`);
   });
 });
