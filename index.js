@@ -4,7 +4,6 @@ const db = require("./models");
 const { User } = require("./models");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
-const { serialize } = require("cookie");
 
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
@@ -12,9 +11,17 @@ const swaggerUi = require("swagger-ui-express");
 const cookieParser = require("cookie-parser");
 const { generateTokens, validateToken } = require("./jwt");
 
-app.use(cors());
+app.use(
+  "*",
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
 
 const option = {
   definition: {
@@ -164,14 +171,8 @@ app.post("/login", async (req, res) => {
         res.status(400).json({ error: "Invalid password!" });
       } else {
         const accessToken = generateTokens(user);
-        res.cookie("accessToken", accessToken, {
+        res.cookie("access_token", accessToken, {
           maxAge: 24 * 60 * 60 * 1000,
-          // Set domain dan path sesuai kebutuhan Anda
-          domain: "localhost",
-          path: "/",
-          // Izinkan kredensial di CORS
-          sameSite: "none",
-          secure: true,
         });
         res.json({
           message: "Logged in Succesfully!",
@@ -201,7 +202,7 @@ app.post("/login", async (req, res) => {
 //logout
 app.post("/logout", validateToken(), (req, res) => {
   // Hapus cookie 'access-token'
-  res.clearCookie("accessToken");
+  res.clearCookie("access_token");
   res.json({ message: "Logged out successfully" });
 });
 
@@ -244,6 +245,7 @@ app.post("/logout", validateToken(), (req, res) => {
 
 //get all user
 app.get("/user", validateToken("admin"), (req, res) => {
+  const token = req.body.accessToken;
   User.findAll()
     .then((result) => {
       res.json(result);

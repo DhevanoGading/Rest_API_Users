@@ -16,7 +16,7 @@ module.exports = {
           res.status(400).json({ error: "Invalid password!" });
         } else {
           const accessToken = generateTokens(user);
-          res.cookie("access-token", accessToken, {
+          res.cookie("access_token", accessToken, {
             maxAge: 24 * 60 * 60 * 1000,
           });
           res.json({
