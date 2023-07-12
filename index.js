@@ -4,6 +4,7 @@ const db = require("./models");
 const { User } = require("./models");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
+const { serialize } = require("cookie");
 
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
@@ -176,7 +177,7 @@ app.post("/login", async (req, res) => {
           maxAge: 24 * 60 * 60 * 1000,
           // Set domain dan path sesuai kebutuhan Anda
           domain: "localhost",
-          path: "/",
+          path: "/login",
           // Izinkan kredensial di CORS
           sameSite: "none",
           secure: true,
@@ -192,6 +193,7 @@ app.post("/login", async (req, res) => {
             email: user.email,
             role: user.role,
           },
+          accessToken,
         });
       }
     });
@@ -289,7 +291,7 @@ app.get("/user", validateToken("admin"), (req, res) => {
  */
 
 //get user
-app.get("/profile/:id", validateToken("user"), (req, res) => {
+app.get("/profile/:id", validateToken(), (req, res) => {
   const { id } = req.params;
   const tokenUserId = req.user.id;
 
