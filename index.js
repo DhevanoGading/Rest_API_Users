@@ -11,6 +11,8 @@ const swaggerUi = require("swagger-ui-express");
 const cookieParser = require("cookie-parser");
 const { generateTokens, validateToken } = require("./jwt");
 
+const PORT = process.env.APP_PORT | 3000;
+
 app.use(
   "*",
   cors({
@@ -32,7 +34,7 @@ const option = {
     },
     servers: [
       {
-        url: "http://localhost:3001/",
+        url: `http://localhost:${PORT}`,
       },
     ],
   },
@@ -301,7 +303,7 @@ app.post("/profile/:id", validateToken(), (req, res) => {
 });
 
 db.sequelize.sync().then((req) => {
-  app.listen(3001, () => {
-    console.log(`Server listening at http://localhost:3001`);
+  app.listen(PORT, () => {
+    console.log(`Server listening at http://localhost:${PORT}`);
   });
 });
