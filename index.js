@@ -32,7 +32,7 @@ const option = {
     },
     servers: [
       {
-        url: "http://localhost:3001/",
+        url: "http://localhost:3000/",
       },
     ],
   },
@@ -173,6 +173,7 @@ app.post("/login", async (req, res) => {
         const accessToken = generateTokens(user);
         res.cookie("access_token", accessToken, {
           maxAge: 24 * 60 * 60 * 1000,
+          httpOnly: true,
         });
         res.json({
           message: "Logged in Succesfully!",
@@ -282,7 +283,6 @@ app.post("/user", validateToken("admin"), (req, res) => {
 app.post("/profile/:id", validateToken(), (req, res) => {
   const { id } = req.params;
   const tokenUserId = req.user.id;
-
   // Memeriksa apakah ID pengguna dalam token sama dengan ID pengguna dalam URL
   if (parseInt(id) !== tokenUserId) {
     return res.status(403).json({ error: "Access denied!" });
@@ -301,7 +301,7 @@ app.post("/profile/:id", validateToken(), (req, res) => {
 });
 
 db.sequelize.sync().then((req) => {
-  app.listen(3001, () => {
-    console.log(`Server listening at http://localhost:3001`);
+  app.listen(3000, () => {
+    console.log(`Server listening at http://localhost:3000`);
   });
 });
