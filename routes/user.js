@@ -53,7 +53,7 @@ router.post("/register/admin", userController.registerAdmin);
  *      200:
  *        description: Register successfully
  */
-router.post("/register/user", userController.registerUser);
+router.post("/register", userController.registerUser);
 /**
  * @swagger
  * /login:
@@ -143,5 +143,53 @@ router.post("/user", validateToken("admin"), userController.getAll);
  *                $ref: '#components/schemas/User'
  */
 router.post("/profile/:id", validateToken(), userController.getUser);
+/**
+ * @swagger
+ * /user/{id}:
+ *  put:
+ *    summary: Update data user
+ *    description: This api is used to update update
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: Numeric ID required
+ *        schema:
+ *          type: integer
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#components/schemas/Auth'
+ *    responses:
+ *      200:
+ *        description: update successfully
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#components/schemas/User'
+ */
+router.put("/user/:id", validateToken(), userController.updateUser);
+/**
+ * @swagger
+ * /user/{id}:
+ *  delete:
+ *    summary: Delete data users
+ *    description: This api is used to delete data user
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: Numeric ID required
+ *        schema:
+ *          type: integer
+ *    responses:
+ *      200:
+ *        description: Delete user successfully
+ */
+router.delete("/user/:id", validateToken("admin"), userController.deleteUser);
 
 module.exports = router;
