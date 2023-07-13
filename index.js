@@ -175,6 +175,7 @@ app.post("/login", async (req, res) => {
         const accessToken = generateTokens(user);
         res.cookie("access_token", accessToken, {
           maxAge: 24 * 60 * 60 * 1000,
+          httpOnly: true,
         });
         res.json({
           message: "Logged in Succesfully!",
@@ -284,7 +285,6 @@ app.post("/user", validateToken("admin"), (req, res) => {
 app.post("/profile/:id", validateToken(), (req, res) => {
   const { id } = req.params;
   const tokenUserId = req.user.id;
-
   // Memeriksa apakah ID pengguna dalam token sama dengan ID pengguna dalam URL
   if (parseInt(id) !== tokenUserId) {
     return res.status(403).json({ error: "Access denied!" });
