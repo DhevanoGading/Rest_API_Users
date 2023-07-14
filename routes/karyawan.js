@@ -8,10 +8,6 @@ const karyawanController = require("../controllers/karyawan");
  * tags:
  *   name: Karyawan
  *   description: API endpoints for Karyawan operations
- */
-
-/**
- * @swagger
  * components:
  *   schemas:
  *     Karyawan:
@@ -169,7 +165,7 @@ const karyawanController = require("../controllers/karyawan");
  */
 /**
  * @swagger
- * /:
+ * /karyawan:
  *  post:
  *    tags: [Karyawan]
  *    summary: Add karywan
@@ -185,6 +181,24 @@ const karyawanController = require("../controllers/karyawan");
  *        description: Register successfully
  */
 router.post("/", validateToken("admin"), karyawanController.addKaryawan);
+/**
+ * @swagger
+ * /karyawan:
+ *  get:
+ *    tags: [Karyawan]
+ *    summary: Get all data karyawan
+ *    description: This api is used to get all data karyawan
+ *    responses:
+ *      200:
+ *        description: Success response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#components/schemas/Karyawan'
+ */
+router.get("/", validateToken("admin"), karyawanController.getAll);
 // router.post("/login", karyawanController.login);
 // router.post("/logout", karyawanController.logout);
 

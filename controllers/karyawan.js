@@ -42,6 +42,18 @@ module.exports = {
         });
       });
   },
+  async getAll(req, res) {
+    await Karyawan.findAll()
+      .then((result) => {
+        res.json({
+          message: "get all karyawan successfully!",
+          result,
+        });
+      })
+      .catch((err) => {
+        res.status(400).json({ error: err.message });
+      });
+  },
   // //login karyawan
   // async login(req, res) {
   //   const requetData = {

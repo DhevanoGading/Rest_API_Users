@@ -8,10 +8,6 @@ const { validateToken } = require("../auth");
  * tags:
  *   name: User
  *   description: API endpoints for user operations
- */
-
-/**
- * @swagger
  * components:
  *   schemas:
  *     Auth:
