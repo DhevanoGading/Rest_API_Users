@@ -5,6 +5,13 @@ const { validateToken } = require("../auth");
 
 /**
  * @swagger
+ * tags:
+ *   name: User
+ *   description: API endpoints for user operations
+ */
+
+/**
+ * @swagger
  * components:
  *   schemas:
  *     Auth:
@@ -23,6 +30,7 @@ const { validateToken } = require("../auth");
  * @swagger
  * /register/admin:
  *  post:
+ *    tags: [User]
  *    summary: Register admin
  *    description: This api is used to admin register
  *    requestBody:
@@ -40,6 +48,7 @@ router.post("/register/admin", userController.registerAdmin);
  * @swagger
  * /register:
  *  post:
+ *    tags: [User]
  *    summary: Register user
  *    description: This api is used to user register
  *    requestBody:
@@ -57,6 +66,7 @@ router.post("/register", userController.registerUser);
  * @swagger
  * /login:
  *   post:
+ *    tags: [User]
  *     summary: Login user
  *     description: This API is used for user login
  *     requestBody:
@@ -74,6 +84,7 @@ router.post("/login", userController.login);
  * @swagger
  * /logout:
  *  post:
+ *    tags: [User]
  *    summary: Logout user
  *    description: This api is used to clear cookie
  *    responses:
@@ -104,6 +115,7 @@ router.post("/logout", validateToken(), userController.logout);
  * @swagger
  * /user:
  *  post:
+ *    tags: [User]
  *    summary: Get all data users
  *    description: This api is used to get all data users
  *    responses:
@@ -121,6 +133,7 @@ router.post("/user", validateToken("admin"), userController.getAll);
  * @swagger
  * /profile/{id}:
  *  post:
+ *    tags: [User]
  *    summary: Get data users
  *    description: This api is used to get data user
  *    parameters:
@@ -145,6 +158,7 @@ router.post("/profile/:id", validateToken(), userController.getUser);
  * @swagger
  * /user/{id}:
  *  put:
+ *    tags: [User]
  *    summary: Update data user
  *    description: This api is used to update update
  *    parameters:
@@ -175,6 +189,7 @@ router.put("/user/:id", validateToken(), userController.updateUser);
  * @swagger
  * /user/{id}:
  *  delete:
+ *    tags: [User]
  *    summary: Delete data users
  *    description: This api is used to delete data user
  *    parameters:

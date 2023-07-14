@@ -29,18 +29,18 @@ module.exports = {
       userRole: req.body.userRole,
     };
 
-    const karyawan = await Karyawan.create(dataKaryawan);
-
-    if (!karyawan) {
-      res.status(400).json({ error: "add karyawan failed!" });
-    } else {
-      const { password, ...data } = await karyawan.toJSON();
-
-      res.json({
-        message: "add karyawan successfully!",
-        data,
+    await Karyawan.create(dataKaryawan)
+      .then((result) => {
+        res.json({
+          result,
+          message: "Add karyawan Successfully!",
+        });
+      })
+      .catch((err) => {
+        res.json({
+          message: err.message,
+        });
       });
-    }
   },
   // //login karyawan
   // async login(req, res) {

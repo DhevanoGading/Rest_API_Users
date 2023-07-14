@@ -122,26 +122,42 @@ const karyawanController = require("../controllers/karyawan");
  *         userRole:
  *           type: string
  *           enum:
- *              - RMO
- *              - RMO
- *              - PMO
- *              - PMO
- *              - BSO
- *              - BSO
- *              - SDO
- *              - SDO
- *              - DSO
- *              - DSO
- *              - BO
- *         password:
- *           type: string
- *         password:
- *           type: string
- *         password:
- *           type: string
+ *              - HRD
+ *              - PMO Admin
+ *              - PMO Employee
+ *              - BSO Admin
+ *              - BSO Employee
+ *              - SDO Admin
+ *              - SDO Employee
+ *              - RMO Admin
+ *              - RMO Employee
+ *              - Trello Admin
+ *              - Project Manager
+ *              - System Analyst
+ *              - Finance
  *       required:
+ *         - karyawanId
+ *         - namaLengkap
+ *         - tempatLahir
+ *         - tglLahir
  *         - email
- *         - password
+ *         - telegramId
+ *         - nomorTelepon
+ *         - jenisIdentitas
+ *         - nomorIdentitas
+ *         - statusPernikahan
+ *         - alamatKtp
+ *         - pendidikanAkhir
+ *         - namaInstitusi
+ *         - jurusan
+ *         - nikKaryawan
+ *         - divisi
+ *         - resource
+ *         - posisi
+ *         - statusKaryawan
+ *         - penempatan
+ *         - tglBergabung
+ *         - userRole
  *       additionalProperties: false
  */
 /**
