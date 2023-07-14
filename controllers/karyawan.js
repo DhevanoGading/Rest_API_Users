@@ -1,5 +1,4 @@
 const { Karyawan } = require("../models");
-const md5 = require("md5");
 const { generateTokens } = require("../auth");
 
 module.exports = {
@@ -11,7 +10,6 @@ module.exports = {
       tempatLahir: req.body.tempatLahir,
       tglLahir: req.body.tglLahir,
       email: req.body.email,
-      password: md5(req.body.password),
       telegramId: req.body.telegramId,
       nomorTelepon: req.body.nomorTelepon,
       jenisIdentitas: req.body.jenisIdentitas,
@@ -44,40 +42,40 @@ module.exports = {
       });
     }
   },
-  //login karyawan
-  async login(req, res) {
-    const requetData = {
-      email: req.body.email,
-      password: md5(req.body.password),
-    };
+  // //login karyawan
+  // async login(req, res) {
+  //   const requetData = {
+  //     email: req.body.email,
+  //     password: md5(req.body.password),
+  //   };
 
-    const karyawan = await Karyawan.findOne({
-      where: { email: requetData.email },
-    });
+  //   const karyawan = await Karyawan.findOne({
+  //     where: { email: requetData.email },
+  //   });
 
-    if (!karyawan) {
-      res.status(400).json({ error: "Email Doesn't Exist!" });
-    } else {
-      if (requetData.password !== karyawan.password) {
-        res.status(400).json({ error: "Invalid password!" });
-      } else {
-        const accessToken = generateTokens(karyawan);
-        res.cookie("access_token", accessToken, {
-          maxAge: 24 * 60 * 60 * 1000,
-          httpOnly: true,
-        });
-        const { password, ...data } = await karyawan.toJSON();
+  //   if (!karyawan) {
+  //     res.status(400).json({ error: "Email Doesn't Exist!" });
+  //   } else {
+  //     if (requetData.password !== karyawan.password) {
+  //       res.status(400).json({ error: "Invalid password!" });
+  //     } else {
+  //       const accessToken = generateTokens(karyawan);
+  //       res.cookie("access_token", accessToken, {
+  //         maxAge: 24 * 60 * 60 * 1000,
+  //         httpOnly: true,
+  //       });
+  //       const { password, ...data } = await karyawan.toJSON();
 
-        res.json({
-          message: "Logged in Succesfully!",
-          data,
-        });
-      }
-    }
-  },
-  logout(req, res) {
-    // Hapus cookie 'access_token'
-    res.clearCookie("access_token");
-    res.json({ message: "Logged out successfully" });
-  },
+  //       res.json({
+  //         message: "Logged in Succesfully!",
+  //         data,
+  //       });
+  //     }
+  //   }
+  // },
+  // logout(req, res) {
+  //   // Hapus cookie 'access_token'
+  //   res.clearCookie("access_token");
+  //   res.json({ message: "Logged out successfully" });
+  // },
 };

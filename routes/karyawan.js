@@ -5,6 +5,147 @@ const karyawanController = require("../controllers/karyawan");
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     Karyawan:
+ *       type: object
+ *       properties:
+ *         karyawanId:
+ *           type: string
+ *         namaLengkap:
+ *           type: string
+ *         tempatLahir:
+ *           type: string
+ *         tglLahir:
+ *           type: date
+ *         email:
+ *           type: string
+ *         password:
+ *           type: string
+ *         telegramId:
+ *           type: string
+ *         nomorTelepon:
+ *           type: string
+ *         jenisIdentitas:
+ *           type: string
+ *           enum:
+ *              - KTP
+ *              - SIM
+ *         nomorIdentitas:
+ *           type: string
+ *         statusPernikahan:
+ *           type: string
+ *           enum:
+ *              - Lajang
+ *              - Menikah
+ *              - Janda
+ *              - Duda
+ *         alamatKtp:
+ *           type: TEXT
+ *         pendidikanAkhir:
+ *           type: string
+ *           enum:
+ *              - SMK/SMU/Sederajat
+ *              - D1
+ *              - D2
+ *              - D3
+ *              - S1
+ *              - S2
+ *              - S3
+ *         namaInstitusi:
+ *           type: string
+ *         jurusan:
+ *           type: string
+ *         nikKaryawan:
+ *           type: string
+ *         divisi:
+ *           type: string
+ *           enum:
+ *              - RMO
+ *              - PMO
+ *              - BSO
+ *              - SDO
+ *              - DSO
+ *              - KMO
+ *              - BO
+ *         resource:
+ *           type: string
+ *           enum:
+ *              - RMO
+ *              - PMO
+ *              - BSO
+ *              - SDO
+ *              - DSO
+ *              - KMO
+ *              - BO
+ *         posisi:
+ *           type: string
+ *           enum:
+ *              - Developer
+ *              - Developer Analyst
+ *              - System Analyst
+ *              - Project Manager
+ *              - Project Admin
+ *              - Quality Control
+ *              - Technical Writer
+ *              - Data Scientist
+ *              - Support Surveillance
+ *              - Support Leader
+ *              - Support Specialist
+ *              - Subject Matter Expert
+ *              - UI/UX
+ *              - System Architect
+ *              - Digital Solutions Senior Officer
+ *              - RF Engineer
+ *              - System Administrator
+ *              - Senior Training Officer
+ *              - Field Engineer Radar
+ *              - Data Analyst
+ *              - Consultant
+ *              - Linguistict
+ *              - Radar Engineer
+ *              - Inventory Admin
+ *              - Machine Learning Engineer
+ *         statusKaryawan:
+ *           type: string
+ *           enum:
+ *              - Permanent
+ *              - Fixed-term contracts
+ *              - Freelance
+ *         penempatan:
+ *           type: string
+ *           enum:
+ *              - Jakarta
+ *              - Yogyakarta
+ *         tglBergabung:
+ *           type: date
+ *         userRole:
+ *           type: string
+ *           enum:
+ *              - RMO
+ *              - RMO
+ *              - PMO
+ *              - PMO
+ *              - BSO
+ *              - BSO
+ *              - SDO
+ *              - SDO
+ *              - DSO
+ *              - DSO
+ *              - BO
+ *         password:
+ *           type: string
+ *         password:
+ *           type: string
+ *         password:
+ *           type: string
+ *       required:
+ *         - email
+ *         - password
+ *       additionalProperties: false
+ */
+/**
+ * @swagger
  * /:
  *  post:
  *    summary: Add karywan
@@ -20,7 +161,7 @@ const karyawanController = require("../controllers/karyawan");
  *        description: Register successfully
  */
 router.post("/", validateToken("admin"), karyawanController.addKaryawan);
-router.post("/login", karyawanController.login);
-router.post("/logout", karyawanController.logout);
+// router.post("/login", karyawanController.login);
+// router.post("/logout", karyawanController.logout);
 
 module.exports = router;

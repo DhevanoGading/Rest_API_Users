@@ -39,13 +39,6 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
-      },
       telegramId: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -70,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       nomorIdentitas: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.STRING,
         allowNull: false,
         unique: true,
         validate: {
@@ -165,7 +158,7 @@ module.exports = (sequelize, DataTypes) => {
           "Field Engineer Radar",
           "Data Analyst",
           "Consultant",
-          "Lingustict",
+          "Linguistict",
           "Radar Engineer",
           "Inventory Admin",
           "Machine Learning Engineer"
