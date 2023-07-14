@@ -19,7 +19,6 @@ const { validateToken } = require("../auth");
  *         - password
  *       additionalProperties: false
  */
-
 /**
  * @swagger
  * /register/admin:
@@ -101,7 +100,6 @@ router.post("/logout", validateToken(), userController.logout);
  *              - admin
  *              - user
  */
-
 /**
  * @swagger
  * /user:

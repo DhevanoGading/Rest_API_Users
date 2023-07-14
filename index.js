@@ -3,9 +3,13 @@ const app = express();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const db = require("./models");
+
 const userRouter = require("./routes/user");
+const karyawanRouter = require("./routes/karyawan");
+
 require("dotenv").config();
 const PORT = process.env.APP_PORT || 3000;
+
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
@@ -41,6 +45,7 @@ const swaggerSpec = swaggerJSDoc(option);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/", userRouter);
+app.use("/karyawan", karyawanRouter);
 
 db.sequelize.sync().then((req) => {
   app.listen(PORT, () => {
