@@ -5,6 +5,13 @@ const karyawanController = require("../controllers/karyawan");
 
 /**
  * @swagger
+ * tags:
+ *   name: Karyawan
+ *   description: API endpoints for Karyawan operations
+ */
+
+/**
+ * @swagger
  * components:
  *   schemas:
  *     Karyawan:
@@ -164,6 +171,7 @@ const karyawanController = require("../controllers/karyawan");
  * @swagger
  * /:
  *  post:
+ *    tags: [Karyawan]
  *    summary: Add karywan
  *    description: This api is used to add karyawan
  *    requestBody:
