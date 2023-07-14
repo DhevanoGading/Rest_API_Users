@@ -29,7 +29,7 @@ CREATE TABLE `Users` (
   `role` enum('admin','user') NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,7 @@ CREATE TABLE `Users` (
 
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` VALUES (1,'Galih@solusi247.com','$2b$10$6y53fOqJrdNQ30d8qUor/.y3Hr4zYSDRa2vg7tCTODEfkH7hzvpRC','admin'),(2,'Gading@solusi247.com','$2b$10$QIy0w0wJgOUoW/aTBWsxVOMyW2FM1IqgTncutHsoe.0zpSgEJbbPi','user');
+INSERT INTO `Users` VALUES (1,'Galih@solusi247.com','027dc74f0bbf09a61a36ec7f0d9e08ca','admin'),(2,'Dhevano@solusi247.com','e9591f71930d3e397fe792aeb78bf510','admin'),(3,'Joy@solusi247.com','924c0b8f054133bb9605822fdb96cba7','user');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-10 23:30:07
+-- Dump completed on 2023-07-13 22:51:24
