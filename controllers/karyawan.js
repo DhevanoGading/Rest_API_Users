@@ -1,5 +1,8 @@
 const { Karyawan } = require("../models");
-const { generateTokens } = require("../auth");
+// const { generateTokens } = require("../utils/auth");
+const { paginatedResult } = require("../utils/pagination");
+const sequelize = require("sequelize");
+const operator = sequelize.Op;
 
 module.exports = {
   //tambah karyawan
@@ -54,6 +57,29 @@ module.exports = {
       .catch((err) => {
         res.status(400).json({ error: err.message });
       });
+    //   try {
+    //     const page = parseInt(req.query.page) || 1;
+    //     const limit = parseInt(req.query.limit) || 10;
+
+    //     const paginatedData = await paginatedResult(Karyawan, page, limit);
+
+    //     const karyawansWithoutPassword = paginatedData.results.map((karyawan) => {
+    //       const { password, ...karyawanData } = karyawan.toJSON();
+    //       return karyawanData;
+    //     });
+
+    //     res.json({
+    //       message: "get karyawan successfully!",
+    //       data: {
+    //         results: karyawansWithoutPassword,
+    //         previous: paginatedData.previous,
+    //         next: paginatedData.next,
+    //       },
+    //     });
+    //   } catch (error) {
+    //     console.log(error);
+    //     res.json({ message: error.message });
+    //   }
   },
   //get karyawan based on id
   async getKaryawan(req, res) {
@@ -68,6 +94,7 @@ module.exports = {
       karyawan,
     });
   },
+  //update karyawan
   async updateKaryawan(req, res) {
     const { id } = req.params;
     const dataKaryawan = {
@@ -103,8 +130,8 @@ module.exports = {
     await Karyawan.update(dataKaryawan, { where: { karyawanId: id } })
       .then((result) => {
         res.json({
-          dataKaryawan,
           message: "Update karyawan Successfully!",
+          dataKaryawan,
         });
       })
       .catch((err) => {
@@ -133,6 +160,51 @@ module.exports = {
         res.json({
           message: err.message,
         });
+      });
+  },
+  //search karyawan
+  async findKaryawan(req, res) {
+    const keyword = req.body.keyword;
+
+    await Karyawan.findAll({
+      where: {
+        [operator.or]: {
+          karyawanId: { [operator.like]: `%${keyword}%` },
+          namaLengkap: { [operator.like]: `%${keyword}%` },
+          tempatLahir: { [operator.like]: `%${keyword}%` },
+          tglLahir: {
+            [operator.gte]: `${keyword}-01-01`,
+            [operator.lt]: `${parseInt(keyword) + 1}-01-01`,
+          },
+          email: { [operator.like]: `%${keyword}%` },
+          telegramId: { [operator.like]: `%${keyword}%` },
+          nomorTelepon: { [operator.like]: `%${keyword}%` },
+          jenisIdentitas: { [operator.like]: `%${keyword}%` },
+          nomorIdentitas: { [operator.like]: `%${keyword}%` },
+          statusPernikahan: { [operator.like]: `%${keyword}%` },
+          alamatKtp: { [operator.like]: `%${keyword}%` },
+          pendidikanAkhir: { [operator.like]: `%${keyword}%` },
+          namaInstitusi: { [operator.like]: `%${keyword}%` },
+          jurusan: { [operator.like]: `%${keyword}%` },
+          nikKaryawan: { [operator.like]: `%${keyword}%` },
+          divisi: { [operator.like]: `%${keyword}%` },
+          resource: { [operator.like]: `%${keyword}%` },
+          posisi: { [operator.like]: `%${keyword}%` },
+          statusKaryawan: { [operator.like]: `%${keyword}%` },
+          penempatan: { [operator.like]: `%${keyword}%` },
+          tglBergabung: {
+            [operator.gte]: `${keyword}-01-01`,
+            [operator.lt]: `${parseInt(keyword) + 1}-01-01`,
+          },
+          userRole: { [operator.like]: `%${keyword}%` },
+        },
+      },
+    })
+      .then((result) => {
+        res.json({ count: result.length, data: result });
+      })
+      .catch((err) => {
+        res.json({ message: err.message });
       });
   },
   // //login karyawan

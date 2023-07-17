@@ -1,6 +1,7 @@
 const { User } = require("../models");
 const md5 = require("md5");
-const { generateTokens } = require("../auth");
+const { generateTokens } = require("../utils/auth");
+const { paginatedResult } = require("../utils/pagination");
 
 module.exports = {
   //register untuk admin
@@ -62,7 +63,6 @@ module.exports = {
         res.cookie("access_token", accessToken, {
           maxAge: 24 * 60 * 60 * 1000,
         });
-        // res.set("Authorization", accessToken);
 
         const { password, ...data } = await user.toJSON();
 
@@ -73,6 +73,7 @@ module.exports = {
       }
     }
   },
+  //logou user
   logout(req, res) {
     // Hapus cookie 'access_token'
     res.clearCookie("access_token");
@@ -92,6 +93,29 @@ module.exports = {
     } catch (err) {
       console.log(err);
     }
+    // try {
+    //   const page = parseInt(req.query.page) || 1;
+    //   const limit = parseInt(req.query.limit) || 10;
+
+    //   const paginatedData = await paginatedResult(User, page, limit);
+
+    //   const usersWithoutPassword = paginatedData.results.map((user) => {
+    //     const { password, ...userData } = user.toJSON();
+    //     return userData;
+    //   });
+
+    //   res.json({
+    //     message: "get user successfully!",
+    //     data: {
+    //       results: usersWithoutPassword,
+    //       previous: paginatedData.previous,
+    //       next: paginatedData.next,
+    //     },
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    //   res.json({ message: error.message });
+    // }
   },
   //get user profile based on role and id
   async getUser(req, res) {

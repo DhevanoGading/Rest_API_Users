@@ -1,95 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user");
-const { validateToken } = require("../auth");
+const { validateToken } = require("../utils/auth");
 
 /**
  * @swagger
  * tags:
  *   name: User
  *   description: API endpoints for user operations
- * components:
- *   schemas:
- *     Auth:
- *       type: object
- *       properties:
- *         email:
- *           type: string
- *         password:
- *           type: string
- *       required:
- *         - email
- *         - password
- *       additionalProperties: false
- */
-/**
- * @swagger
- * /register/admin:
- *  post:
- *    tags: [User]
- *    summary: Register admin
- *    description: This api is used to admin register
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#components/schemas/Auth'
- *    responses:
- *      200:
- *        description: Register successfully
- */
-router.post("/register/admin", userController.registerAdmin);
-/**
- * @swagger
- * /register:
- *  post:
- *    tags: [User]
- *    summary: Register user
- *    description: This api is used to user register
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#components/schemas/Auth'
- *    responses:
- *      200:
- *        description: Register successfully
- */
-router.post("/register", userController.registerUser);
-/**
- * @swagger
- * /login:
- *   post:
- *     tags: [User]
- *     summary: Login user
- *     description: This API is used for user login
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Auth'
- *     responses:
- *       200:
- *         description: login successfully
- */
-router.post("/login", userController.login);
-/**
- * @swagger
- * /logout:
- *  post:
- *    tags: [User]
- *    summary: Logout user
- *    description: This api is used to clear cookie
- *    responses:
- *      200:
- *        description: Logout Succesfully!
- */
-router.post("/logout", validateToken(), userController.logout);
-/**
- * @swagger
  * components:
  *    schemas:
  *      User:
@@ -109,11 +27,22 @@ router.post("/logout", validateToken(), userController.logout);
  */
 /**
  * @swagger
- * /user:
+ * /user?page=1&limit=5:
  *  get:
  *    tags: [User]
  *    summary: Get all data users
  *    description: This api is used to get all data users
+ *    parameters:
+ *      - in: query
+ *        name: page
+ *        schema:
+ *          type: integer
+ *        description: The number of page
+ *      - in: query
+ *        name: limit
+ *        schema:
+ *          type: integer
+ *        description: The limit of data
  *    responses:
  *      200:
  *        description: Success response
@@ -124,7 +53,7 @@ router.post("/logout", validateToken(), userController.logout);
  *              items:
  *                $ref: '#components/schemas/User'
  */
-router.get("/user", validateToken("admin"), userController.getAll);
+router.get("/", validateToken("admin"), userController.getAll);
 /**
  * @swagger
  * /user/{id}:
@@ -149,14 +78,14 @@ router.get("/user", validateToken("admin"), userController.getAll);
  *              items:
  *                $ref: '#components/schemas/User'
  */
-router.get("/user/:id", validateToken(), userController.getUser);
+router.get("/:id", validateToken(), userController.getUser);
 /**
  * @swagger
  * /user/{id}:
  *  put:
  *    tags: [User]
  *    summary: Update data user
- *    description: This api is used to update update
+ *    description: This api is used to update user
  *    parameters:
  *      - in: path
  *        name: id
@@ -180,7 +109,7 @@ router.get("/user/:id", validateToken(), userController.getUser);
  *              items:
  *                $ref: '#components/schemas/User'
  */
-router.put("/user/:id", validateToken(), userController.updateUser);
+router.put("/:id", validateToken(), userController.updateUser);
 /**
  * @swagger
  * /user/{id}:
@@ -199,6 +128,6 @@ router.put("/user/:id", validateToken(), userController.updateUser);
  *      200:
  *        description: Delete user successfully
  */
-router.delete("/user/:id", validateToken("admin"), userController.deleteUser);
+router.delete("/:id", validateToken("admin"), userController.deleteUser);
 
 module.exports = router;

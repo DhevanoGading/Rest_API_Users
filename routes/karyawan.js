@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { validateToken } = require("../auth");
+const { validateToken } = require("../utils/auth");
 const karyawanController = require("../controllers/karyawan");
 
 /**
@@ -20,7 +20,8 @@ const karyawanController = require("../controllers/karyawan");
  *         tempatLahir:
  *           type: string
  *         tglLahir:
- *           type: date
+ *           type : string
+ *           format: date
  *         email:
  *           type: string
  *         password:
@@ -44,7 +45,7 @@ const karyawanController = require("../controllers/karyawan");
  *              - Janda
  *              - Duda
  *         alamatKtp:
- *           type: TEXT
+ *           type: string
  *         pendidikanAkhir:
  *           type: string
  *           enum:
@@ -121,7 +122,8 @@ const karyawanController = require("../controllers/karyawan");
  *              - Jakarta
  *              - Yogyakarta
  *         tglBergabung:
- *           type: date
+ *           type: string
+ *           format: date
  *         userRole:
  *           type: string
  *           enum:
@@ -183,11 +185,22 @@ const karyawanController = require("../controllers/karyawan");
 router.post("/", validateToken("admin"), karyawanController.addKaryawan);
 /**
  * @swagger
- * /karyawan:
+ * /karyawan?page=1&limit=5:
  *  get:
  *    tags: [Karyawan]
  *    summary: Get all data karyawan
  *    description: This api is used to get all data karyawan
+ *    parameters:
+ *      - in: query
+ *        name: page
+ *        schema:
+ *          type: integer
+ *        description: The number of page
+ *      - in: query
+ *        name: limit
+ *        schema:
+ *          type: integer
+ *        description: The limit of data
  *    responses:
  *      200:
  *        description: Success response
@@ -224,7 +237,58 @@ router.get("/", validateToken("admin"), karyawanController.getAll);
  *                $ref: '#components/schemas/Karyawan'
  */
 router.get("/:id", validateToken("admin"), karyawanController.getKaryawan);
-
+/**
+ * @swagger
+ * /karyawan/find:
+ *  post:
+ *    tags: [Karyawan]
+ *    summary: Search karywan
+ *    description: This api is used to search karyawan
+ *    parameters:
+ *      - in: body
+ *        name: requestBody
+ *        description: Keyword for searching
+ *        required: false
+ *        schema:
+ *          type: object
+ *          properties:
+ *           keyword:
+ *             type: string
+ *    responses:
+ *      200:
+ *        description: Register successfully
+ */
+router.post("/find", validateToken("admin"), karyawanController.findKaryawan);
+/**
+ * @swagger
+ * /karyawan/{id}:
+ *  put:
+ *    tags: [Karyawan]
+ *    summary: Update data karyawan
+ *    description: This api is used to update karyawan
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: ID required
+ *        schema:
+ *          type: string
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#components/schemas/Karyawan'
+ *    responses:
+ *      200:
+ *        description: update successfully
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#components/schemas/Karyawan'
+ */
 router.put("/:id", validateToken("admin"), karyawanController.updateKaryawan);
 /**
  * @swagger
@@ -249,7 +313,5 @@ router.delete(
   validateToken("admin"),
   karyawanController.deleteKaryawaan
 );
-// router.post("/login", karyawanController.login);
-// router.post("/logout", karyawanController.logout);
 
 module.exports = router;

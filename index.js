@@ -4,6 +4,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const db = require("./models");
 
+const authRouter = require("./routes/authentication");
 const userRouter = require("./routes/user");
 const karyawanRouter = require("./routes/karyawan");
 
@@ -38,13 +39,18 @@ const option = {
       },
     ],
   },
-  apis: ["./routes/user.js", "./routes/karyawan.js"],
+  apis: [
+    "./routes/authentication.js",
+    "./routes/user.js",
+    "./routes/karyawan.js",
+  ],
 };
 
 const swaggerSpec = swaggerJSDoc(option);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.use("/", userRouter);
+app.use("/", authRouter);
+app.use("/user", userRouter);
 app.use("/karyawan", karyawanRouter);
 
 db.sequelize.sync().then((req) => {
