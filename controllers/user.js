@@ -49,7 +49,6 @@ module.exports = {
       email: req.body.email,
       password: md5(req.body.password),
     };
-    // const { email, password } = req.body;
 
     const user = await User.findOne({ where: { email: requetData.email } });
 
@@ -62,7 +61,6 @@ module.exports = {
         const accessToken = generateTokens(user);
         res.cookie("access_token", accessToken, {
           maxAge: 24 * 60 * 60 * 1000,
-          httpOnly: true,
         });
         const { password, ...data } = await user.toJSON();
 
@@ -97,21 +95,32 @@ module.exports = {
   async getUser(req, res) {
     const { id } = req.params;
     const tokenUserId = req.user.id;
+    const role = req.user.role;
 
-    // Memeriksa apakah ID pengguna dalam token sama dengan ID pengguna dalam URL
-    if (parseInt(id) !== tokenUserId) {
-      return res.status(403).json({ error: "Access denied!" });
-    }
     const user = await User.findOne({
       where: { id: id },
     });
 
-    const { password, ...data } = await user.toJSON();
+    if (role === "admin") {
+      const { password, ...data } = await user.toJSON();
 
-    res.json({
-      message: "get profile succesfully!",
-      data,
-    });
+      res.json({
+        message: "get profile succesfully!",
+        data,
+      });
+    } else {
+      // Memeriksa apakah ID pengguna dalam token sama dengan ID pengguna dalam URL
+      if (parseInt(id) !== tokenUserId) {
+        return res.status(403).json({ error: "Access denied!" });
+      }
+
+      const { password, ...data } = await user.toJSON();
+
+      res.json({
+        message: "get profile succesfully!",
+        data,
+      });
+    }
   },
   //update User
   async updateUser(req, res) {

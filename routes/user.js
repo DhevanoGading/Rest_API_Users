@@ -63,7 +63,7 @@ router.post("/register", userController.registerUser);
  * /login:
  *   post:
  *    tags: [User]
- *     summary: Login user
+ *     summary: login user
  *     description: This API is used for user login
  *     requestBody:
  *       required: true
@@ -73,7 +73,7 @@ router.post("/register", userController.registerUser);
  *             $ref: '#/components/schemas/Auth'
  *     responses:
  *       200:
- *         description: Login successfully
+ *         description: login successfully
  */
 router.post("/login", userController.login);
 /**
@@ -110,7 +110,7 @@ router.post("/logout", validateToken(), userController.logout);
 /**
  * @swagger
  * /user:
- *  post:
+ *  get:
  *    tags: [User]
  *    summary: Get all data users
  *    description: This api is used to get all data users
@@ -124,11 +124,11 @@ router.post("/logout", validateToken(), userController.logout);
  *              items:
  *                $ref: '#components/schemas/User'
  */
-router.post("/user", validateToken("admin"), userController.getAll);
+router.get("/user", validateToken("admin"), userController.getAll);
 /**
  * @swagger
  * /profile/{id}:
- *  post:
+ *  get:
  *    tags: [User]
  *    summary: Get data users
  *    description: This api is used to get data user
@@ -149,7 +149,7 @@ router.post("/user", validateToken("admin"), userController.getAll);
  *              items:
  *                $ref: '#components/schemas/User'
  */
-router.post("/profile/:id", validateToken(), userController.getUser);
+router.get("/profile/:id", validateToken(), userController.getUser);
 /**
  * @swagger
  * /user/{id}:

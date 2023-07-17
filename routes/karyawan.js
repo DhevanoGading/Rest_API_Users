@@ -199,6 +199,56 @@ router.post("/", validateToken("admin"), karyawanController.addKaryawan);
  *                $ref: '#components/schemas/Karyawan'
  */
 router.get("/", validateToken("admin"), karyawanController.getAll);
+/**
+ * @swagger
+ * /karyawan/{id}:
+ *  get:
+ *    tags: [Karyawan]
+ *    summary: Get data karyawan
+ *    description: This api is used to get data karyawan
+ *    parameters:
+ *      - in: path
+ *        name: karyawanId
+ *        required: true
+ *        description: ID required
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: Success response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#components/schemas/Karyawan'
+ */
+router.get("/:id", validateToken("admin"), karyawanController.getKaryawan);
+
+router.put("/:id", validateToken("admin"), karyawanController.updateKaryawan);
+/**
+ * @swagger
+ * /karyawan/{id}:
+ *  delete:
+ *    tags: [Karyawan]
+ *    summary: Delete data karyawan
+ *    description: This api is used to delete data karyawan
+ *    parameters:
+ *      - in: path
+ *        name: karyawanId
+ *        required: true
+ *        description: ID required
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: Delete karyawan successfully
+ */
+router.delete(
+  "/:id",
+  validateToken("admin"),
+  karyawanController.deleteKaryawaan
+);
 // router.post("/login", karyawanController.login);
 // router.post("/logout", karyawanController.logout);
 

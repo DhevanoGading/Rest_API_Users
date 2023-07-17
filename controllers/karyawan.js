@@ -42,6 +42,7 @@ module.exports = {
         });
       });
   },
+  //get all dat karyawan
   async getAll(req, res) {
     await Karyawan.findAll()
       .then((result) => {
@@ -52,6 +53,86 @@ module.exports = {
       })
       .catch((err) => {
         res.status(400).json({ error: err.message });
+      });
+  },
+  //get karyawan based on id
+  async getKaryawan(req, res) {
+    const { id } = req.params;
+
+    const karyawan = await Karyawan.findOne({ where: { karyawanId: id } });
+    if (!karyawan) {
+      return res.json({ message: "Karyawan not found!" });
+    }
+    res.json({
+      message: "Get karyawan Successfully!",
+      karyawan,
+    });
+  },
+  async updateKaryawan(req, res) {
+    const { id } = req.params;
+    const dataKaryawan = {
+      karyawanId: req.body.karyawanId,
+      namaLengkap: req.body.namaLengkap,
+      tempatLahir: req.body.tempatLahir,
+      tglLahir: req.body.tglLahir,
+      email: req.body.email,
+      telegramId: req.body.telegramId,
+      nomorTelepon: req.body.nomorTelepon,
+      jenisIdentitas: req.body.jenisIdentitas,
+      nomorIdentitas: req.body.nomorIdentitas,
+      statusPernikahan: req.body.statusPernikahan,
+      alamatKtp: req.body.alamatKtp,
+      pendidikanAkhir: req.body.pendidikanAkhir,
+      namaInstitusi: req.body.namaInstitusi,
+      jurusan: req.body.jurusan,
+      nikKaryawan: req.body.nikKaryawan,
+      divisi: req.body.divisi,
+      resource: req.body.resource,
+      posisi: req.body.posisi,
+      statusKaryawan: req.body.statusKaryawan,
+      penempatan: req.body.penempatan,
+      tglBergabung: req.body.tglBergabung,
+      userRole: req.body.userRole,
+    };
+
+    const karyawan = await Karyawan.findOne({ where: { karyawanId: id } });
+    if (!karyawan) {
+      return res.json({ message: "Karyawan not found!" });
+    }
+
+    await Karyawan.update(dataKaryawan, { where: { karyawanId: id } })
+      .then((result) => {
+        res.json({
+          dataKaryawan,
+          message: "Update karyawan Successfully!",
+        });
+      })
+      .catch((err) => {
+        res.json({
+          message: err.message,
+        });
+      });
+  },
+  //delete karyawan, only admin
+  async deleteKaryawaan(req, res) {
+    const { id } = req.params;
+
+    const karyawan = await Karyawan.findOne({ where: { karyawanId: id } });
+    if (!karyawan) {
+      return res.json({ message: "Karyawan not found!" });
+    }
+
+    await Karyawan.destroy({ where: { karyawanId: id } })
+      .then((result) => {
+        res.json({
+          statusCode: res.statusCode,
+          message: "Karyawan has been deleted!",
+        });
+      })
+      .catch((err) => {
+        res.json({
+          message: err.message,
+        });
       });
   },
   // //login karyawan
