@@ -62,6 +62,8 @@ module.exports = {
         res.cookie("access_token", accessToken, {
           maxAge: 24 * 60 * 60 * 1000,
         });
+        // res.set("Authorization", accessToken);
+
         const { password, ...data } = await user.toJSON();
 
         res.json({

@@ -62,8 +62,8 @@ router.post("/register", userController.registerUser);
  * @swagger
  * /login:
  *   post:
- *    tags: [User]
- *     summary: login user
+ *     tags: [User]
+ *     summary: Login user
  *     description: This API is used for user login
  *     requestBody:
  *       required: true
@@ -127,7 +127,7 @@ router.post("/logout", validateToken(), userController.logout);
 router.get("/user", validateToken("admin"), userController.getAll);
 /**
  * @swagger
- * /profile/{id}:
+ * /user/{id}:
  *  get:
  *    tags: [User]
  *    summary: Get data users
@@ -149,7 +149,7 @@ router.get("/user", validateToken("admin"), userController.getAll);
  *              items:
  *                $ref: '#components/schemas/User'
  */
-router.get("/profile/:id", validateToken(), userController.getUser);
+router.get("/user/:id", validateToken(), userController.getUser);
 /**
  * @swagger
  * /user/{id}:

@@ -15,9 +15,8 @@ module.exports = {
   },
 
   validateToken: (requiredRole) => (req, res, next) => {
-    const token = req.headers.cookie;
-    const tokenArr = token.split("=");
-    const accessToken = tokenArr[1];
+    // const accessToken = req.headers.authorization;
+    const accessToken = req.cookies["access_token"];
 
     if (!accessToken || accessToken === undefined || accessToken === "")
       return res.status(400).json({ error: "User not Autenticated!" });
