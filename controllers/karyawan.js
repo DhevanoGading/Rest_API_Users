@@ -1,6 +1,5 @@
 const { Karyawan } = require("../models");
-// const { generateTokens } = require("../utils/auth");
-const { paginatedResult } = require("../utils/pagination");
+// const { paginatedResult } = require("../utils/pagination");
 const sequelize = require("sequelize");
 const operator = sequelize.Op;
 
@@ -207,40 +206,4 @@ module.exports = {
         res.json({ message: err.message });
       });
   },
-  // //login karyawan
-  // async login(req, res) {
-  //   const requetData = {
-  //     email: req.body.email,
-  //     password: md5(req.body.password),
-  //   };
-
-  //   const karyawan = await Karyawan.findOne({
-  //     where: { email: requetData.email },
-  //   });
-
-  //   if (!karyawan) {
-  //     res.status(400).json({ error: "Email Doesn't Exist!" });
-  //   } else {
-  //     if (requetData.password !== karyawan.password) {
-  //       res.status(400).json({ error: "Invalid password!" });
-  //     } else {
-  //       const accessToken = generateTokens(karyawan);
-  //       res.cookie("access_token", accessToken, {
-  //         maxAge: 24 * 60 * 60 * 1000,
-  //         httpOnly: true,
-  //       });
-  //       const { password, ...data } = await karyawan.toJSON();
-
-  //       res.json({
-  //         message: "Logged in Succesfully!",
-  //         data,
-  //       });
-  //     }
-  //   }
-  // },
-  // logout(req, res) {
-  //   // Hapus cookie 'access_token'
-  //   res.clearCookie("access_token");
-  //   res.json({ message: "Logged out successfully" });
-  // },
 };
