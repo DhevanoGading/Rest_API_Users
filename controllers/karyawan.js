@@ -1,48 +1,31 @@
 const { Karyawan } = require("../models");
 // const { paginatedResult } = require("../utils/pagination");
+const {
+  validateKaryawanData,
+  isDataExist,
+  validateKaryawanUpdate,
+} = require("../utils/validateKaryawan");
 const sequelize = require("sequelize");
 const operator = sequelize.Op;
 
 module.exports = {
   //tambah karyawan
   async addKaryawan(req, res) {
-    const dataKaryawan = {
-      karyawanId: req.body.karyawanId,
-      namaLengkap: req.body.namaLengkap,
-      tempatLahir: req.body.tempatLahir,
-      tglLahir: req.body.tglLahir,
-      email: req.body.email,
-      telegramId: req.body.telegramId,
-      nomorTelepon: req.body.nomorTelepon,
-      jenisIdentitas: req.body.jenisIdentitas,
-      nomorIdentitas: req.body.nomorIdentitas,
-      statusPernikahan: req.body.statusPernikahan,
-      alamatKtp: req.body.alamatKtp,
-      pendidikanAkhir: req.body.pendidikanAkhir,
-      namaInstitusi: req.body.namaInstitusi,
-      jurusan: req.body.jurusan,
-      nikKaryawan: req.body.nikKaryawan,
-      divisi: req.body.divisi,
-      resource: req.body.resource,
-      posisi: req.body.posisi,
-      statusKaryawan: req.body.statusKaryawan,
-      penempatan: req.body.penempatan,
-      tglBergabung: req.body.tglBergabung,
-      userRole: req.body.userRole,
-    };
+    try {
+      const validationMessage = await validateKaryawanData(Karyawan, req.body);
+      if (validationMessage) {
+        return res.status(409).json({ error: validationMessage });
+      }
 
-    await Karyawan.create(dataKaryawan)
-      .then((result) => {
-        res.json({
-          result,
-          message: "Add karyawan Successfully!",
-        });
-      })
-      .catch((err) => {
-        res.json({
-          message: err.message,
-        });
+      const result = await Karyawan.create(req.body);
+      res.json({
+        result,
+        message: "Add karyawan Successfully!",
       });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: err.message });
+    }
   },
   //get all dat karyawan
   async getAll(req, res) {
@@ -95,49 +78,36 @@ module.exports = {
   },
   //update karyawan
   async updateKaryawan(req, res) {
-    const { id } = req.params;
-    const dataKaryawan = {
-      karyawanId: req.body.karyawanId,
-      namaLengkap: req.body.namaLengkap,
-      tempatLahir: req.body.tempatLahir,
-      tglLahir: req.body.tglLahir,
-      email: req.body.email,
-      telegramId: req.body.telegramId,
-      nomorTelepon: req.body.nomorTelepon,
-      jenisIdentitas: req.body.jenisIdentitas,
-      nomorIdentitas: req.body.nomorIdentitas,
-      statusPernikahan: req.body.statusPernikahan,
-      alamatKtp: req.body.alamatKtp,
-      pendidikanAkhir: req.body.pendidikanAkhir,
-      namaInstitusi: req.body.namaInstitusi,
-      jurusan: req.body.jurusan,
-      nikKaryawan: req.body.nikKaryawan,
-      divisi: req.body.divisi,
-      resource: req.body.resource,
-      posisi: req.body.posisi,
-      statusKaryawan: req.body.statusKaryawan,
-      penempatan: req.body.penempatan,
-      tglBergabung: req.body.tglBergabung,
-      userRole: req.body.userRole,
-    };
+    try {
+      const { karyawanId } = req.params;
+      const validationMessage = await validateKaryawanData(Karyawan, req.body);
 
-    const karyawan = await Karyawan.findOne({ where: { karyawanId: id } });
-    if (!karyawan) {
-      return res.json({ message: "Karyawan not found!" });
-    }
+      if (
+        validationMessage &&
+        !(await isDataExist(Karyawan, "karyawanId", karyawanId))
+      ) {
+        return res.status(409).json({ error: validationMessage });
+      }
 
-    await Karyawan.update(dataKaryawan, { where: { karyawanId: id } })
-      .then((result) => {
-        res.json({
-          message: "Update karyawan Successfully!",
-          dataKaryawan,
-        });
-      })
-      .catch((err) => {
-        res.json({
-          message: err.message,
-        });
+      const [updatedRows] = await Karyawan.update(req.body, {
+        where: { karyawanId },
       });
+
+      if (updatedRows === 0) {
+        return res.status(404).json({ error: "Nothing to update!" });
+      }
+
+      res.json({
+        message: "Update karyawan successfully!",
+      });
+    } catch (err) {
+      console.error(err);
+      const validationMessage = await validateKaryawanUpdate(
+        Karyawan,
+        req.body
+      );
+      res.status(500).json({ error: validationMessage });
+    }
   },
   //delete karyawan, only admin
   async deleteKaryawaan(req, res) {

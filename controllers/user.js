@@ -90,6 +90,7 @@ module.exports = {
         password: md5(req.body.password),
         role: req.body.role,
       };
+
       const [rowsAffected] = await User.update(dataUser, { where: { id: id } });
 
       if (rowsAffected === 0) {
@@ -147,6 +148,26 @@ module.exports = {
         res.json({
           message: err.message,
         });
+      });
+  },
+  //search user
+  async findUser(req, res) {
+    const keyword = req.body.keyword;
+
+    await User.findAll({
+      where: {
+        [operator.or]: {
+          id: { [operator.like]: `%${keyword}%` },
+          email: { [operator.like]: `%${keyword}%` },
+          role: { [operator.like]: `%${keyword}%` },
+        },
+      },
+    })
+      .then((result) => {
+        res.json({ count: result.length, data: result });
+      })
+      .catch((err) => {
+        res.json({ message: err.message });
       });
   },
 };

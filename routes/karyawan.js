@@ -256,7 +256,7 @@ router.get("/:id", validateToken("admin"), karyawanController.getKaryawan);
  *             type: string
  *    responses:
  *      200:
- *        description: Register successfully
+ *        description: karyawan founded!
  */
 router.post("/find", validateToken("admin"), karyawanController.findKaryawan);
 /**
@@ -289,7 +289,11 @@ router.post("/find", validateToken("admin"), karyawanController.findKaryawan);
  *              items:
  *                $ref: '#components/schemas/Karyawan'
  */
-router.put("/:id", validateToken("admin"), karyawanController.updateKaryawan);
+router.put(
+  "/:karyawanId",
+  validateToken("admin"),
+  karyawanController.updateKaryawan
+);
 /**
  * @swagger
  * /karyawan/{id}:

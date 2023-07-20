@@ -10,6 +10,16 @@ module.exports = {
       password: md5(req.body.password),
       role: "admin",
     };
+
+    const existingEmail = await User.findOne({
+      where: { email: dataUser.email },
+    });
+    if (existingEmail) {
+      return res
+        .status(409)
+        .json({ error: `User email ${dataUser.email} already exist!` });
+    }
+
     const user = await User.create(dataUser);
 
     if (!user) {
@@ -30,6 +40,16 @@ module.exports = {
       password: md5(req.body.password),
       role: "user",
     };
+
+    const existingEmail = await User.findOne({
+      where: { email: dataUser.email },
+    });
+    if (existingEmail) {
+      return res
+        .status(409)
+        .json({ error: `User email ${dataUser.email} already exist!` });
+    }
+
     const user = await User.create(dataUser);
 
     if (!user) {
