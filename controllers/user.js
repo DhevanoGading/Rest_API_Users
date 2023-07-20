@@ -51,15 +51,13 @@ module.exports = {
       where: { id: id },
     });
     if (!user) {
-      return res.json({ message: "Karyawan not found!" });
+      return res.status(400).json({ message: "Karyawan not found!" });
     }
 
     if (role === "admin") {
-      const { password, ...data } = await user.toJSON();
-
       res.json({
         message: "get profile succesfully!",
-        data,
+        user,
       });
     } else {
       // Memeriksa apakah ID pengguna dalam token sama dengan ID pengguna dalam URL

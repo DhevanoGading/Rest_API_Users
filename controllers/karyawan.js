@@ -75,7 +75,7 @@ module.exports = {
 
     const karyawan = await Karyawan.findOne({ where: { karyawanId: id } });
     if (!karyawan) {
-      return res.json({ message: "Karyawan not found!" });
+      return res.status(400).json({ message: "Karyawan not found!" });
     }
 
     res.json({
@@ -86,12 +86,17 @@ module.exports = {
   //update karyawan
   async updateKaryawan(req, res) {
     try {
+      const { karyawanId } = req.params;
+      const karyawan = await Karyawan.findOne({ where: { karyawanId } });
+      if (!karyawan) {
+        return res.status(400).json({ message: "Karyawan not found!" });
+      }
+
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.json(errors.array());
       }
 
-      const { karyawanId } = req.params;
       const validationMessage = await validateKaryawanData(Karyawan, req.body);
 
       if (
