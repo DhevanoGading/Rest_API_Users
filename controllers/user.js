@@ -90,7 +90,7 @@ module.exports = {
     const existingUser = await User.findOne({
       where: { email: dataUser.email },
     });
-    if (existingUser && existingUser.id !== userId) {
+    if (existingUser && existingUser.id !== parseInt(id)) {
       return res.status(400).json({ error: "Email already exists!" });
     }
 
