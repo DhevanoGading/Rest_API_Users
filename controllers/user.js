@@ -74,7 +74,6 @@ module.exports = {
   async updateUser(req, res) {
     const { id } = req.params;
     const { role, id: userId } = req.user;
-
     const user = await User.findOne({ where: { id: id } });
 
     if (!user) {
@@ -84,37 +83,43 @@ module.exports = {
     const isAdmin = role === "admin";
     const dataUser = {
       email: req.body.email,
-      password: md5(req.body.password),
     };
+
+    if (req.body.password.length > 0) {
+      dataUser.password = md5(req.body.password);
+    }
 
     const existingUser = await User.findOne({
       where: { email: dataUser.email },
     });
+
     if (existingUser && existingUser.id !== parseInt(id)) {
       return res.status(400).json({ error: "Email already exists!" });
     }
 
-    if (isAdmin || parseInt(id) === userId) {
-      if (isAdmin) {
-        dataUser.role = req.body.role;
-      }
-
-      const [rowsAffected] = await User.update(dataUser, { where: { id: id } });
-
-      if (rowsAffected === 0) {
-        res.status(400).json({ error: "Nothing to Update!" });
-      } else {
-        const responseData = { ...dataUser };
-        delete responseData.password;
-
-        res.json({
-          message: "User has been updated!",
-          responseData,
-        });
-      }
-    } else {
-      res.status(403).json({ error: "Access denied!" });
+    if (!isAdmin && parseInt(id) !== userId) {
+      return res.status(403).json({ error: "Access denied!" });
     }
+
+    if (isAdmin) {
+      dataUser.role = req.body.role;
+    }
+
+    const [rowsAffected] = await User.update(dataUser, {
+      where: { id: id },
+    });
+
+    if (rowsAffected === 0) {
+      return res.status(400).json({ error: "Nothing to Update!" });
+    }
+
+    const responseData = { ...dataUser };
+    delete responseData.password;
+
+    res.status(201).json({
+      message: "User has been updated!",
+      dataUser,
+    });
   },
   //delete user, only admin
   async deleteUser(req, res) {
