@@ -75,26 +75,37 @@ module.exports = {
   //update User
   async updateUser(req, res) {
     const { id } = req.params;
-
-    const role = req.user.role;
-    const userId = req.user.id;
+    const { role, id: userId } = req.user;
 
     const user = await User.findOne({ where: { id: id } });
+
     if (!user) {
       return res.json({ message: "User not found!" });
     }
 
-    if (role === "admin") {
-      const dataUser = {
-        email: req.body.email,
-        password: md5(req.body.password),
-        role: req.body.role,
-      };
+    const isAdmin = role === "admin";
+    const dataUser = {
+      email: req.body.email,
+      password: md5(req.body.password),
+    };
+
+    const existingUser = await User.findOne({
+      where: { email: dataUser.email },
+    });
+
+    if (existingUser && existingUser.id !== userId) {
+      return res.status(400).json({ error: "Email already exists!" });
+    }
+
+    if (isAdmin || parseInt(id) === userId) {
+      if (isAdmin) {
+        dataUser.role = req.body.role;
+      }
 
       const [rowsAffected] = await User.update(dataUser, { where: { id: id } });
 
       if (rowsAffected === 0) {
-        res.status(400).json({ error: "nothing to Update!" });
+        res.status(400).json({ error: "Nothing to Update!" });
       } else {
         const responseData = { ...dataUser };
         delete responseData.password;
@@ -105,27 +116,7 @@ module.exports = {
         });
       }
     } else {
-      if (parseInt(id) !== userId) {
-        return res.status(403).json({ error: "Access denied!" });
-      }
-
-      const dataUser = {
-        email: req.body.email,
-        password: md5(req.body.password),
-      };
-      const [rowsAffected] = await User.update(dataUser, { where: { id: id } });
-
-      if (rowsAffected === 0) {
-        res.status(400).json({ error: "nothing to Update!" });
-      } else {
-        const responseData = { ...dataUser };
-        delete responseData.password;
-
-        res.json({
-          message: "User has been updated!",
-          responseData,
-        });
-      }
+      res.status(403).json({ error: "Access denied!" });
     }
   },
   //delete user, only admin
