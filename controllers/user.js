@@ -83,7 +83,7 @@ module.exports = {
     const user = await User.findOne({ where: { id: id } });
 
     if (!user) {
-      return res.json({ message: "User not found!" });
+      return res.status(400).json({ message: "User not found!" });
     }
 
     const isAdmin = role === "admin";
