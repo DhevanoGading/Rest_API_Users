@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user");
 const { validateToken } = require("../utils/auth");
+const { userValidator } = require("../utils/inputValidator");
 
 /**
  * @swagger
@@ -109,7 +110,7 @@ router.get("/:id", validateToken(), userController.getUser);
  *              items:
  *                $ref: '#components/schemas/User'
  */
-router.put("/:id", validateToken(), userController.updateUser);
+router.put("/:id", validateToken(), userValidator, userController.updateUser);
 /**
  * @swagger
  * /user/{id}:

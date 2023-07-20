@@ -72,54 +72,63 @@ module.exports = {
   },
   //update User
   async updateUser(req, res) {
-    const { id } = req.params;
-    const { role, id: userId } = req.user;
-    const user = await User.findOne({ where: { id: id } });
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.json(errors.array());
+      }
 
-    if (!user) {
-      return res.status(400).json({ message: "User not found!" });
+      const { id } = req.params;
+      const { role, id: userId } = req.user;
+      const user = await User.findOne({ where: { id: id } });
+
+      if (!user) {
+        return res.status(400).json({ message: "User not found!" });
+      }
+
+      const isAdmin = role === "admin";
+      const dataUser = {
+        email: req.body.email,
+      };
+
+      if (req.body.password.length > 0) {
+        dataUser.password = md5(req.body.password);
+      }
+
+      const existingUser = await User.findOne({
+        where: { email: dataUser.email },
+      });
+
+      if (existingUser && existingUser.id !== parseInt(id)) {
+        return res.status(400).json({ error: "Email already exists!" });
+      }
+
+      if (!isAdmin && parseInt(id) !== userId) {
+        return res.status(403).json({ error: "Access denied!" });
+      }
+
+      if (isAdmin) {
+        dataUser.role = req.body.role;
+      }
+
+      const [rowsAffected] = await User.update(dataUser, {
+        where: { id: id },
+      });
+
+      if (rowsAffected === 0) {
+        return res.status(400).json({ error: "Nothing to Update!" });
+      }
+
+      const responseData = { ...dataUser };
+      delete responseData.password;
+
+      res.status(201).json({
+        message: "User has been updated!",
+        dataUser,
+      });
+    } catch (error) {
+      res.json({ message: error.message });
     }
-
-    const isAdmin = role === "admin";
-    const dataUser = {
-      email: req.body.email,
-    };
-
-    if (req.body.password.length > 0) {
-      dataUser.password = md5(req.body.password);
-    }
-
-    const existingUser = await User.findOne({
-      where: { email: dataUser.email },
-    });
-
-    if (existingUser && existingUser.id !== parseInt(id)) {
-      return res.status(400).json({ error: "Email already exists!" });
-    }
-
-    if (!isAdmin && parseInt(id) !== userId) {
-      return res.status(403).json({ error: "Access denied!" });
-    }
-
-    if (isAdmin) {
-      dataUser.role = req.body.role;
-    }
-
-    const [rowsAffected] = await User.update(dataUser, {
-      where: { id: id },
-    });
-
-    if (rowsAffected === 0) {
-      return res.status(400).json({ error: "Nothing to Update!" });
-    }
-
-    const responseData = { ...dataUser };
-    delete responseData.password;
-
-    res.status(201).json({
-      message: "User has been updated!",
-      dataUser,
-    });
   },
   //delete user, only admin
   async deleteUser(req, res) {

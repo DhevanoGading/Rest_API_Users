@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const authController = require("../controllers/authentication");
 const { validateToken } = require("../utils/auth");
 const { userValidator } = require("../utils/inputValidator");
+const authController = require("../controllers/authentication");
 
 /**
  * @swagger
