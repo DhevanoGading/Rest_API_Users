@@ -50,6 +50,9 @@ module.exports = {
     const user = await User.findOne({
       where: { id: id },
     });
+    if (!user) {
+      return res.json({ message: "Karyawan not found!" });
+    }
 
     if (role === "admin") {
       const { password, ...data } = await user.toJSON();

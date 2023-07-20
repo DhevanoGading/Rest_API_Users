@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { validateToken } = require("../utils/auth");
+const { karyawanValidator } = require("../utils/inputValidator");
 const karyawanController = require("../controllers/karyawan");
 
 /**
@@ -182,7 +183,12 @@ const karyawanController = require("../controllers/karyawan");
  *      200:
  *        description: Register successfully
  */
-router.post("/", validateToken("admin"), karyawanController.addKaryawan);
+router.post(
+  "/",
+  validateToken("admin"),
+  karyawanValidator,
+  karyawanController.addKaryawan
+);
 /**
  * @swagger
  * /karyawan?page=1&limit=5:
@@ -261,7 +267,7 @@ router.get("/:id", validateToken("admin"), karyawanController.getKaryawan);
 router.post("/find", validateToken("admin"), karyawanController.findKaryawan);
 /**
  * @swagger
- * /karyawan/{id}:
+ * /karyawan/{karyawanId}:
  *  put:
  *    tags: [Karyawan]
  *    summary: Update data karyawan
@@ -292,6 +298,7 @@ router.post("/find", validateToken("admin"), karyawanController.findKaryawan);
 router.put(
   "/:karyawanId",
   validateToken("admin"),
+  karyawanValidator,
   karyawanController.updateKaryawan
 );
 /**

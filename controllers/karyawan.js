@@ -1,4 +1,5 @@
 const { Karyawan } = require("../models");
+const { validationResult } = require("express-validator");
 // const { paginatedResult } = require("../utils/pagination");
 const {
   validateKaryawanData,
@@ -12,6 +13,11 @@ module.exports = {
   //tambah karyawan
   async addKaryawan(req, res) {
     try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.json(errors.array());
+      }
+
       const validationMessage = await validateKaryawanData(Karyawan, req.body);
       if (validationMessage) {
         return res.status(409).json({ error: validationMessage });
@@ -71,6 +77,7 @@ module.exports = {
     if (!karyawan) {
       return res.json({ message: "Karyawan not found!" });
     }
+
     res.json({
       message: "Get karyawan Successfully!",
       karyawan,
@@ -79,6 +86,11 @@ module.exports = {
   //update karyawan
   async updateKaryawan(req, res) {
     try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.json(errors.array());
+      }
+
       const { karyawanId } = req.params;
       const validationMessage = await validateKaryawanData(Karyawan, req.body);
 

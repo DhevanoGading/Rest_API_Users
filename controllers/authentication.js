@@ -1,10 +1,16 @@
 const md5 = require("md5");
 const { generateTokens } = require("../utils/auth");
 const { User } = require("../models");
+const { validationResult } = require("express-validator");
 
 module.exports = {
   //register untuk admin
   async registerAdmin(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.json(errors.array());
+    }
+
     const dataUser = {
       email: req.body.email,
       password: md5(req.body.password),
@@ -35,6 +41,11 @@ module.exports = {
   },
   //register untuk user
   async registerUser(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.json(errors.array());
+    }
+
     const dataUser = {
       email: req.body.email,
       password: md5(req.body.password),

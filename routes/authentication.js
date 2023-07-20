@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/authentication");
 const { validateToken } = require("../utils/auth");
+const { userValidator } = require("../utils/inputValidator");
 
 /**
  * @swagger
@@ -39,7 +40,7 @@ const { validateToken } = require("../utils/auth");
  *      200:
  *        description: Register successfully
  */
-router.post("/register/admin", authController.registerAdmin);
+router.post("/register/admin", [userValidator], authController.registerAdmin);
 /**
  * @swagger
  * /register:
@@ -57,7 +58,7 @@ router.post("/register/admin", authController.registerAdmin);
  *      200:
  *        description: Register successfully
  */
-router.post("/register", authController.registerUser);
+router.post("/register", [userValidator], authController.registerUser);
 /**
  * @swagger
  * /login:
