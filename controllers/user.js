@@ -64,12 +64,9 @@ module.exports = {
       if (parseInt(id) !== tokenUserId) {
         return res.status(403).json({ error: "Access denied!" });
       }
-
-      const { password, ...data } = await user.toJSON();
-
       res.json({
         message: "get profile succesfully!",
-        data,
+        user,
       });
     }
   },
