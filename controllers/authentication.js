@@ -33,7 +33,7 @@ module.exports = {
     } else {
       const { password, ...data } = await user.toJSON();
 
-      res.json({
+      res.status(201).json({
         message: "Admin Registered!",
         data,
       });
@@ -43,7 +43,7 @@ module.exports = {
   async registerUser(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.json(errors.array());
+      return res.status(400).json(errors.array());
     }
 
     const dataUser = {
@@ -68,7 +68,7 @@ module.exports = {
     } else {
       const { password, ...data } = await user.toJSON();
 
-      res.json({
+      res.status(201).json({
         message: "User Registered!",
         data,
       });
@@ -96,7 +96,7 @@ module.exports = {
 
         const { password, ...data } = await user.toJSON();
 
-        res.json({
+        res.status(200).json({
           message: "Logged in Succesfully!",
           data,
         });
@@ -107,6 +107,6 @@ module.exports = {
   logout(req, res) {
     // Hapus cookie 'access_token'
     res.clearCookie("access_token");
-    res.json({ message: "Logged out successfully" });
+    res.status(200).json({ message: "Logged out successfully" });
   },
 };

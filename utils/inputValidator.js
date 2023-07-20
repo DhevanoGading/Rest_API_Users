@@ -1,12 +1,17 @@
 const { check } = require("express-validator");
 
 exports.userValidator = [
-  check("email").isEmail().withMessage("Format Email isn't suitable"),
+  check("email")
+    .notEmpty()
+    .withMessage(`Password must be filled!`)
+    .isEmail()
+    .withMessage("Format Email isn't suitable"),
   check("password")
     .notEmpty()
-    .withMessage(`Password must be filled`)
+    .withMessage(`Password must be filled!`)
+    .optional({ checkFalsy: true })
     .isLength({ min: 6 })
-    .withMessage(`Password at least 6 characters`),
+    .withMessage(`Password at least 6 characters!`),
 ];
 
 exports.karyawanValidator = [

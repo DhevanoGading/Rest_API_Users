@@ -15,7 +15,7 @@ module.exports = {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.json(errors.array());
+        return res.status(400).json(errors.array());
       }
 
       const validationMessage = await validateKaryawanData(Karyawan, req.body);
@@ -24,7 +24,7 @@ module.exports = {
       }
 
       const result = await Karyawan.create(req.body);
-      res.json({
+      res.status(201).json({
         result,
         message: "Add karyawan Successfully!",
       });
@@ -37,7 +37,7 @@ module.exports = {
   async getAll(req, res) {
     await Karyawan.findAll()
       .then((result) => {
-        res.json({
+        res.status(200).json({
           message: "get all karyawan successfully!",
           result,
         });
@@ -56,7 +56,7 @@ module.exports = {
     //       return karyawanData;
     //     });
 
-    //     res.json({
+    //     res.status(200).json({
     //       message: "get karyawan successfully!",
     //       data: {
     //         results: karyawansWithoutPassword,
@@ -66,7 +66,7 @@ module.exports = {
     //     });
     //   } catch (error) {
     //     console.log(error);
-    //     res.json({ message: error.message });
+    //     res.status(500).json({ message: error.message });
     //   }
   },
   //get karyawan based on id
@@ -75,10 +75,10 @@ module.exports = {
 
     const karyawan = await Karyawan.findOne({ where: { karyawanId: id } });
     if (!karyawan) {
-      return res.status(400).json({ message: "Karyawan not found!" });
+      return res.status(404).json({ message: "Karyawan not found!" });
     }
 
-    res.json({
+    res.status(200).json({
       message: "Get karyawan Successfully!",
       karyawan,
     });
@@ -89,12 +89,12 @@ module.exports = {
       const { karyawanId } = req.params;
       const karyawan = await Karyawan.findOne({ where: { karyawanId } });
       if (!karyawan) {
-        return res.status(400).json({ message: "Karyawan not found!" });
+        return res.status(404).json({ message: "Karyawan not found!" });
       }
 
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.json(errors.array());
+        return res.status(400).json(errors.array());
       }
 
       const validationMessage = await validateKaryawanData(Karyawan, req.body);
@@ -111,10 +111,10 @@ module.exports = {
       });
 
       if (updatedRows === 0) {
-        return res.status(404).json({ error: "Nothing to update!" });
+        return res.status(204).json({ error: "Nothing to update!" });
       }
 
-      res.json({
+      res.status(201).json({
         message: "Update karyawan successfully!",
       });
     } catch (err) {
@@ -132,18 +132,18 @@ module.exports = {
 
     const karyawan = await Karyawan.findOne({ where: { karyawanId: id } });
     if (!karyawan) {
-      return res.json({ message: "Karyawan not found!" });
+      return res.status(404).json({ message: "Karyawan not found!" });
     }
 
     await Karyawan.destroy({ where: { karyawanId: id } })
       .then((result) => {
-        res.json({
+        res.status(201).json({
           statusCode: res.statusCode,
           message: "Karyawan has been deleted!",
         });
       })
       .catch((err) => {
-        res.json({
+        res.status(500).json({
           message: err.message,
         });
       });
@@ -187,10 +187,10 @@ module.exports = {
       },
     })
       .then((result) => {
-        res.json({ count: result.length, data: result });
+        res.status(200).json({ count: result.length, data: result });
       })
       .catch((err) => {
-        res.json({ message: err.message });
+        res.status(500).json({ message: err.message });
       });
   },
 };

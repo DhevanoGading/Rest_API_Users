@@ -19,14 +19,14 @@ module.exports = {
     const accessToken = req.cookies["access_token"];
 
     if (!accessToken || accessToken === undefined || accessToken === "")
-      return res.status(400).json({ error: "User not Autenticated!" });
+      return res.status(401).json({ error: "User not Autenticated!" });
 
     try {
       const validToken = verify(accessToken, KEY);
       if (validToken) {
         req.authenticated = true;
         if (requiredRole && requiredRole !== validToken.role) {
-          return res.status(400).json({ error: "Unauthorized access!" });
+          return res.status(401).json({ error: "Unauthorized access!" });
         }
         req.user = validToken;
         return next();

@@ -1,5 +1,6 @@
 const { User } = require("../models");
 const md5 = require("md5");
+const { validationResult } = require("express-validator");
 // const { paginatedResult } = require("../utils/pagination");
 
 module.exports = {
@@ -13,7 +14,7 @@ module.exports = {
         return userData;
       });
 
-      res.json(usersWithoutPassword);
+      res.status(200).json(usersWithoutPassword);
     } catch (err) {
       console.log(err);
     }
@@ -28,7 +29,7 @@ module.exports = {
     //     return userData;
     //   });
 
-    //   res.json({
+    //   res.status(200).json({
     //     message: "get user successfully!",
     //     data: {
     //       results: usersWithoutPassword,
@@ -38,7 +39,7 @@ module.exports = {
     //   });
     // } catch (error) {
     //   console.log(error);
-    //   res.json({ message: error.message });
+    //   res.status(500).json({ message: error.message });
     // }
   },
   //get user profile based on role and id
@@ -51,11 +52,11 @@ module.exports = {
       where: { id: id },
     });
     if (!user) {
-      return res.status(400).json({ message: "Karyawan not found!" });
+      return res.status(404).json({ message: "Karyawan not found!" });
     }
 
     if (role === "admin") {
-      res.json({
+      res.status(200).json({
         message: "get profile succesfully!",
         user,
       });
@@ -64,7 +65,7 @@ module.exports = {
       if (parseInt(id) !== tokenUserId) {
         return res.status(403).json({ error: "Access denied!" });
       }
-      res.json({
+      res.status(200).json({
         message: "get profile succesfully!",
         user,
       });
@@ -75,7 +76,7 @@ module.exports = {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.json(errors.array());
+        return res.status(400).json(errors.array());
       }
 
       const { id } = req.params;
@@ -83,7 +84,7 @@ module.exports = {
       const user = await User.findOne({ where: { id: id } });
 
       if (!user) {
-        return res.status(400).json({ message: "User not found!" });
+        return res.status(404).json({ message: "User not found!" });
       }
 
       const isAdmin = role === "admin";
@@ -100,7 +101,7 @@ module.exports = {
       });
 
       if (existingUser && existingUser.id !== parseInt(id)) {
-        return res.status(400).json({ error: "Email already exists!" });
+        return res.status(409).json({ error: "Email already exists!" });
       }
 
       if (!isAdmin && parseInt(id) !== userId) {
@@ -116,7 +117,7 @@ module.exports = {
       });
 
       if (rowsAffected === 0) {
-        return res.status(400).json({ error: "Nothing to Update!" });
+        return res.status(204).json({ error: "Nothing to Update!" });
       }
 
       const responseData = { ...dataUser };
@@ -127,7 +128,7 @@ module.exports = {
         dataUser,
       });
     } catch (error) {
-      res.json({ message: error.message });
+      res.status(500).json({ message: error.message });
     }
   },
   //delete user, only admin
@@ -136,18 +137,18 @@ module.exports = {
 
     const user = await User.findOne({ where: { id: id } });
     if (!user) {
-      return res.json({ message: "User not found!" });
+      return res.status(404).json({ message: "User not found!" });
     }
 
     await User.destroy({ where: { id: id } })
       .then((result) => {
-        res.json({
+        res.status(201).json({
           statusCode: res.statusCode,
           message: "User has been deleted!",
         });
       })
       .catch((err) => {
-        res.json({
+        res.status(500).json({
           message: err.message,
         });
       });
@@ -166,10 +167,10 @@ module.exports = {
       },
     })
       .then((result) => {
-        res.json({ count: result.length, data: result });
+        res.status(200).json({ count: result.length, data: result });
       })
       .catch((err) => {
-        res.json({ message: err.message });
+        res.status(500).json({ message: err.message });
       });
   },
 };

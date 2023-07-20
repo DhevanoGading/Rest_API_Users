@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user");
 const { validateToken } = require("../utils/auth");
+const { body } = require("express-validator");
 const { userValidator } = require("../utils/inputValidator");
 
 /**
