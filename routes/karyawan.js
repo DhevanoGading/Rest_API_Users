@@ -227,7 +227,7 @@ router.get("/", validateToken("admin"), karyawanController.getAll);
  *    description: This api is used to get data karyawan
  *    parameters:
  *      - in: path
- *        name: karyawanId
+ *        name: id
  *        required: true
  *        description: ID required
  *        schema:
@@ -274,7 +274,7 @@ router.post("/find", validateToken("admin"), karyawanController.findKaryawan);
  *    description: This api is used to update karyawan
  *    parameters:
  *      - in: path
- *        name: id
+ *        name: karyawanId
  *        required: true
  *        description: ID required
  *        schema:
@@ -310,7 +310,7 @@ router.put(
  *    description: This api is used to delete data karyawan
  *    parameters:
  *      - in: path
- *        name: karyawanId
+ *        name: id
  *        required: true
  *        description: ID required
  *        schema:

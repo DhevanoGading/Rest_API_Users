@@ -152,7 +152,6 @@ module.exports = {
       });
 
       if (rowsAffected === 0) {
-        console.log(rowsAffected);
         return res.status(200).json({ error: "Nothing to Update!" });
       }
 
