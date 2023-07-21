@@ -49,7 +49,11 @@ module.exports = {
         return userData;
       });
 
-      res.status(200).json(usersWithoutPassword);
+      res.status(200).json({
+        count: users.length,
+        message: "get all user successfully!",
+        users: usersWithoutPassword,
+      });
     } catch (err) {
       console.log(err);
     }

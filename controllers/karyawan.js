@@ -38,6 +38,7 @@ module.exports = {
     await Karyawan.findAll()
       .then((result) => {
         res.status(200).json({
+          count: result.length,
           message: "get all karyawan successfully!",
           result,
         });
