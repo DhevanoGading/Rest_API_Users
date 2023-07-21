@@ -111,7 +111,7 @@ module.exports = {
       });
 
       if (updatedRows === 0) {
-        return res.status(204).json({ error: "Nothing to update!" });
+        return res.status(200).json({ error: "Nothing to update!" });
       }
 
       res.status(201).json({

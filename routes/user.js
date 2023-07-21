@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user");
 const { validateToken } = require("../utils/auth");
-const { body } = require("express-validator");
 const { userValidator } = require("../utils/inputValidator");
 
 /**
@@ -27,6 +26,24 @@ const { userValidator } = require("../utils/inputValidator");
  *              - admin
  *              - user
  */
+/**
+ * @swagger
+ * /user:
+ *  post:
+ *    tags: [User]
+ *    summary: Add user
+ *    description: This api is used to add user
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#components/schemas/User'
+ *    responses:
+ *      200:
+ *        description: Add successfully
+ */
+router.post("/", validateToken("admin"), userValidator, userController.addUser);
 /**
  * @swagger
  * /user?page=1&limit=5:

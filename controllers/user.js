@@ -4,6 +4,41 @@ const { validationResult } = require("express-validator");
 // const { paginatedResult } = require("../utils/pagination");
 
 module.exports = {
+  //tambah user
+  async addUser(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json(errors.array());
+    }
+
+    const dataUser = {
+      email: req.body.email,
+      password: md5(req.body.password),
+      role: req.body.role,
+    };
+
+    const existingEmail = await User.findOne({
+      where: { email: dataUser.email },
+    });
+    if (existingEmail) {
+      return res
+        .status(409)
+        .json({ error: `User email ${dataUser.email} already exist!` });
+    }
+
+    const user = await User.create(dataUser);
+
+    if (!user) {
+      res.status(400).json({ error: "Add user failed!" });
+    } else {
+      const { password, ...data } = await user.toJSON();
+
+      res.status(201).json({
+        message: "Add user successfully!",
+        data,
+      });
+    }
+  },
   //get all data user
   async getAll(req, res) {
     try {
@@ -117,7 +152,8 @@ module.exports = {
       });
 
       if (rowsAffected === 0) {
-        return res.status(204).json({ error: "Nothing to Update!" });
+        console.log(rowsAffected);
+        return res.status(200).json({ error: "Nothing to Update!" });
       }
 
       const responseData = { ...dataUser };

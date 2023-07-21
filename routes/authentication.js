@@ -43,24 +43,6 @@ const authController = require("../controllers/authentication");
 router.post("/register/admin", [userValidator], authController.registerAdmin);
 /**
  * @swagger
- * /register:
- *  post:
- *    tags: [Auth]
- *    summary: Register user
- *    description: This api is used to user register
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#components/schemas/Auth'
- *    responses:
- *      200:
- *        description: Register successfully
- */
-router.post("/register", [userValidator], authController.registerUser);
-/**
- * @swagger
  * /login:
  *   post:
  *     tags: [Auth]

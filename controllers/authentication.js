@@ -39,41 +39,6 @@ module.exports = {
       });
     }
   },
-  //register untuk user
-  async registerUser(req, res) {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json(errors.array());
-    }
-
-    const dataUser = {
-      email: req.body.email,
-      password: md5(req.body.password),
-      role: "user",
-    };
-
-    const existingEmail = await User.findOne({
-      where: { email: dataUser.email },
-    });
-    if (existingEmail) {
-      return res
-        .status(409)
-        .json({ error: `User email ${dataUser.email} already exist!` });
-    }
-
-    const user = await User.create(dataUser);
-
-    if (!user) {
-      res.status(400).json({ error: "Register failed!" });
-    } else {
-      const { password, ...data } = await user.toJSON();
-
-      res.status(201).json({
-        message: "User Registered!",
-        data,
-      });
-    }
-  },
   //login untuk user dan admin
   async login(req, res) {
     const requetData = {
