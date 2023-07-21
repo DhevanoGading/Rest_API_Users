@@ -12,7 +12,6 @@ exports.userValidator = [
     .optional({ checkFalsy: true })
     .isLength({ min: 6 })
     .withMessage(`Password at least 6 characters!`),
-  check("role").notEmpty().withMessage(`Role must be filled!`),
 ];
 
 exports.karyawanValidator = [
