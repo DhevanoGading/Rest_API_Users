@@ -49,7 +49,7 @@ module.exports = {
     const user = await User.findOne({ where: { email: requetData.email } });
 
     if (!user) {
-      res.status(400).json({ error: "User Doesn't Exist!" });
+      res.status(400).json({ error: "Email Doesn't Exist!" });
     } else {
       if (requetData.password !== user.password) {
         res.status(400).json({ error: "Invalid password!" });
