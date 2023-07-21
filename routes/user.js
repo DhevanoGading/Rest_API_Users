@@ -46,7 +46,7 @@ const { userValidator } = require("../utils/inputValidator");
 router.post("/", validateToken("admin"), userValidator, userController.addUser);
 /**
  * @swagger
- * /user?page=1&limit=5:
+ * /user:
  *  get:
  *    tags: [User]
  *    summary: Get all data users

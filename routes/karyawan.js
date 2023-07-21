@@ -191,7 +191,7 @@ router.post(
 );
 /**
  * @swagger
- * /karyawan?page=1&limit=5:
+ * /karyawan:
  *  get:
  *    tags: [Karyawan]
  *    summary: Get all data karyawan
