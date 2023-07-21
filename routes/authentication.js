@@ -22,10 +22,22 @@ const authController = require("../controllers/authentication");
  *         - email
  *         - password
  *       additionalProperties: false
+ *     UserWithRole:
+ *          allOf:
+ *          - $ref: '#/components/schemas/Auth'
+ *          - type: object
+ *            properties:
+ *              role:
+ *                type: string
+ *                enum:
+ *                  - admin
+ *                  - user
+ *            required:
+ *              - role
  */
 /**
  * @swagger
- * /register/admin:
+ * /register:
  *  post:
  *    tags: [Auth]
  *    summary: Register admin
@@ -40,7 +52,7 @@ const authController = require("../controllers/authentication");
  *      200:
  *        description: Register successfully
  */
-router.post("/register/admin", [userValidator], authController.registerAdmin);
+router.post("/register", [userValidator], authController.registerAdmin);
 /**
  * @swagger
  * /login:

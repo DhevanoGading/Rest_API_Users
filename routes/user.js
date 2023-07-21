@@ -38,7 +38,7 @@ const { userValidator } = require("../utils/inputValidator");
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#components/schemas/User'
+ *            $ref: '#components/schemas/UserWithRole'
  *    responses:
  *      200:
  *        description: Add successfully
@@ -117,7 +117,7 @@ router.get("/:id", validateToken(), userController.getUser);
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#components/schemas/Auth'
+ *            $ref: '#components/schemas/UserWithRole'
  *    responses:
  *      200:
  *        description: update successfully
