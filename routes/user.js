@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user");
+const { body } = require("express-validator");
 const { validateToken } = require("../utils/auth");
 const { userValidator } = require("../utils/inputValidator");
 
@@ -43,7 +44,12 @@ const { userValidator } = require("../utils/inputValidator");
  *      200:
  *        description: Add successfully
  */
-router.post("/", validateToken("admin"), userValidator, userController.addUser);
+router.post(
+  "/",
+  validateToken("admin"),
+  [userValidator, body("role").notEmpty().withMessage(`Role must be filled!`)],
+  userController.addUser
+);
 /**
  * @swagger
  * /user:
@@ -128,7 +134,12 @@ router.get("/:id", validateToken(), userController.getUser);
  *              items:
  *                $ref: '#components/schemas/User'
  */
-router.put("/:id", validateToken(), userValidator, userController.updateUser);
+router.put(
+  "/:id",
+  validateToken(),
+  [userValidator, body("role").notEmpty().withMessage(`Role must be filled!`)],
+  userController.updateUser
+);
 /**
  * @swagger
  * /user/{id}:
