@@ -88,7 +88,7 @@ module.exports = {
   async updateKaryawan(req, res) {
     try {
       const { karyawanId } = req.params;
-      console.log(karyawanId);
+
       const karyawan = await Karyawan.findOne({ where: { karyawanId } });
       if (!karyawan) {
         return res.status(404).json({ message: "Karyawan not found!" });
