@@ -196,17 +196,6 @@ router.post(
  *    tags: [Karyawan]
  *    summary: Get all data karyawan
  *    description: This api is used to get all data karyawan
- *    parameters:
- *      - in: query
- *        name: page
- *        schema:
- *          type: integer
- *        description: The number of page
- *      - in: query
- *        name: limit
- *        schema:
- *          type: integer
- *        description: The limit of data
  *    responses:
  *      200:
  *        description: Success response

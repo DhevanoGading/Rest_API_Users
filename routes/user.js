@@ -57,17 +57,6 @@ router.post(
  *    tags: [User]
  *    summary: Get all data users
  *    description: This api is used to get all data users
- *    parameters:
- *      - in: query
- *        name: page
- *        schema:
- *          type: integer
- *        description: The number of page
- *      - in: query
- *        name: limit
- *        schema:
- *          type: integer
- *        description: The limit of data
  *    responses:
  *      200:
  *        description: Success response
