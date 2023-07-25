@@ -1,7 +1,8 @@
 const { User } = require("../models");
 const md5 = require("md5");
 const { validationResult } = require("express-validator");
-// const { paginatedResult } = require("../utils/pagination");
+// const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
 module.exports = {
   //tambah user
@@ -41,22 +42,24 @@ module.exports = {
   },
   //get all data user
   async getAll(req, res) {
-    try {
-      const users = await User.findAll();
+    // try {
+    //   const users = await User.findAll();
+    //   const usersWithoutPassword = users.map((user) => {
+    //     const { password, ...userData } = user.toJSON();
+    //     return userData;
+    //   });
+    //   res.status(200).json({
+    //     count: users.length,
+    //     message: "get all user successfully!",
+    //     users: usersWithoutPassword,
+    //   });
+    // } catch (err) {
+    //   console.log(err);
+    // }
+    const response = await fetch("https://api.github.com/users/github");
+    const data = await response.json();
 
-      const usersWithoutPassword = users.map((user) => {
-        const { password, ...userData } = user.toJSON();
-        return userData;
-      });
-
-      res.status(200).json({
-        count: users.length,
-        message: "get all user successfully!",
-        users: usersWithoutPassword,
-      });
-    } catch (err) {
-      console.log(err);
-    }
+    console.log(data);
   },
   //get user profile based on role and id
   async getUser(req, res) {
