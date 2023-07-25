@@ -2,7 +2,11 @@ const { User } = require("../models");
 const md5 = require("md5");
 const { validationResult } = require("express-validator");
 const fetch = require("node-fetch");
-// import fetch from "node-fetch";
+require("dotenv").config();
+const APIKey = process.env.API_KEY;
+const APIToken = process.env.API_TOKEN;
+const BaseUrl = process.env.BASE_TRELLO_URL;
+const boardId = "AwWYnIgK";
 
 module.exports = {
   //tambah user
@@ -43,60 +47,63 @@ module.exports = {
   //get all data user
   async getAll(req, res) {
     try {
-      const APIKey = "Your_Trello_API_Key";
-      const APIToken = "Your_Trello_API_Token";
-      const id = "The_ID_of_Your_Trello_Action";
-
-      const response = await fetch(
-        `https://api.trello.com/1/actions/${id}?key=${APIKey}&token=${APIToken}`,
+      const responseTrello = await fetch(
+        `${BaseUrl}boards/${boardId}?key=${APIKey}&token=${APIToken}`,
         {
           method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
         }
       );
 
-      const data = await response.json();
-
-      console.log(`Response: ${response.status} ${response.statusText}`);
-      console.log(data);
-
-      // Handle the data as per your requirement
-      res.json(data);
+      if (responseTrello.ok) {
+        const data = await responseTrello.json();
+        res.json(data);
+      } else {
+        res.status(responseTrello.status).json({
+          error: "Terjadi kesalahan dalam mengambil data dari Trello API.",
+        });
+      }
     } catch (error) {
       console.error(error);
-      res
-        .status(500)
-        .json({
-          error: "Something went wrong while fetching data from Trello API.",
-        });
+      res.status(500).json({
+        error: error.message,
+      });
     }
   },
   //get user profile based on role and id
   async getUser(req, res) {
-    const { id } = req.params;
-    const tokenUserId = req.user.id;
-    const role = req.user.role;
+    try {
+      const { id } = req.params;
+      const tokenUserId = req.user.id;
+      const role = req.user.role;
 
-    const user = await User.findOne({
-      where: { id: id },
-    });
-    if (!user) {
-      return res.status(404).json({ message: "Karyawan not found!" });
-    }
-
-    if (role === "admin") {
-      res.status(200).json({
-        message: "get profile succesfully!",
-        user,
+      const user = await User.findOne({
+        where: { id: id },
       });
-    } else {
-      // Memeriksa apakah ID pengguna dalam token sama dengan ID pengguna dalam URL
-      if (parseInt(id) !== tokenUserId) {
-        return res.status(403).json({ error: "Access denied!" });
+      if (!user) {
+        return res.status(404).json({ message: "Karyawan not found!" });
       }
-      res.status(200).json({
-        message: "get profile succesfully!",
-        user,
-      });
+
+      if (role === "admin") {
+        res.status(200).json({
+          message: "get profile succesfully!",
+          user,
+        });
+      } else {
+        // Memeriksa apakah ID pengguna dalam token sama dengan ID pengguna dalam URL
+        if (parseInt(id) !== tokenUserId) {
+          return res.status(403).json({ error: "Access denied!" });
+        }
+        res.status(200).json({
+          message: "get profile succesfully!",
+          user,
+        });
+      }
+    } catch (error) {
+      console.error(err);
+      res.status(500).json({ error: err.message });
     }
   },
   //update User
@@ -108,6 +115,7 @@ module.exports = {
       }
 
       const { id } = req.params;
+      console.log("INI ID", id);
       const { role, id: userId } = req.user;
       const user = await User.findOne({ where: { id: id } });
 

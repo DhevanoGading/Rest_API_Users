@@ -1,11 +1,14 @@
 const { Karyawan } = require("../models");
 const { validationResult } = require("express-validator");
-// const { paginatedResult } = require("../utils/pagination");
 const {
   validateKaryawanData,
   isDataExist,
   validateKaryawanUpdate,
 } = require("../utils/validateKaryawan");
+require("dotenv").config();
+const APIKey = process.env.API_KEY;
+const APIToken = process.env.API_TOKEN;
+const BaseUrl = process.env.BASE_TRELLO_URL;
 const sequelize = require("sequelize");
 const operator = sequelize.Op;
 
@@ -49,17 +52,43 @@ module.exports = {
   },
   //get karyawan based on id
   async getKaryawan(req, res) {
-    const { id } = req.params;
+    try {
+      const { id } = req.params;
 
-    const karyawan = await Karyawan.findOne({ where: { karyawanId: id } });
-    if (!karyawan) {
-      return res.status(404).json({ message: "Karyawan not found!" });
+      const responseTrello = await fetch(
+        `${BaseUrl}members/${id}?key=${APIKey}&token=${APIToken}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+
+      const karyawan = await Karyawan.findOne({ where: { karyawanId: id } });
+      if (!karyawan) {
+        return res.status(404).json({ message: "Karyawan not found!" });
+      }
+
+      if (responseTrello.ok) {
+        const data = await responseTrello.json();
+
+        res.status(200).json({
+          message: "Get karyawan Successfully!",
+          karyawan,
+          trello: data,
+        });
+      } else {
+        return res.status(responseTrello.status).json({
+          error: "Terjadi kesalahan dalam mengambil data dari Trello API.",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        error: error.message,
+      });
     }
-
-    res.status(200).json({
-      message: "Get karyawan Successfully!",
-      karyawan,
-    });
   },
   //update karyawan
   async updateKaryawan(req, res) {
