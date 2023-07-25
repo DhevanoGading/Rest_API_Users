@@ -57,29 +57,6 @@ module.exports = {
     } catch (err) {
       console.log(err);
     }
-    // try {
-    //   const page = parseInt(req.query.page) || 1;
-    //   const limit = parseInt(req.query.limit) || 10;
-
-    //   const paginatedData = await paginatedResult(User, page, limit);
-
-    //   const usersWithoutPassword = paginatedData.results.map((user) => {
-    //     const { password, ...userData } = user.toJSON();
-    //     return userData;
-    //   });
-
-    //   res.status(200).json({
-    //     message: "get user successfully!",
-    //     data: {
-    //       results: usersWithoutPassword,
-    //       previous: paginatedData.previous,
-    //       next: paginatedData.next,
-    //     },
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    //   res.status(500).json({ message: error.message });
-    // }
   },
   //get user profile based on role and id
   async getUser(req, res) {

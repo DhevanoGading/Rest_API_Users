@@ -46,29 +46,6 @@ module.exports = {
       .catch((err) => {
         res.status(400).json({ error: err.message });
       });
-    //   try {
-    //     const page = parseInt(req.query.page) || 1;
-    //     const limit = parseInt(req.query.limit) || 10;
-
-    //     const paginatedData = await paginatedResult(Karyawan, page, limit);
-
-    //     const karyawansWithoutPassword = paginatedData.results.map((karyawan) => {
-    //       const { password, ...karyawanData } = karyawan.toJSON();
-    //       return karyawanData;
-    //     });
-
-    //     res.status(200).json({
-    //       message: "get karyawan successfully!",
-    //       data: {
-    //         results: karyawansWithoutPassword,
-    //         previous: paginatedData.previous,
-    //         next: paginatedData.next,
-    //       },
-    //     });
-    //   } catch (error) {
-    //     console.log(error);
-    //     res.status(500).json({ message: error.message });
-    //   }
   },
   //get karyawan based on id
   async getKaryawan(req, res) {
