@@ -1,8 +1,8 @@
 const { User } = require("../models");
 const md5 = require("md5");
 const { validationResult } = require("express-validator");
-// const fetch = require("node-fetch");
-import fetch from "node-fetch";
+const fetch = require("node-fetch");
+// import fetch from "node-fetch";
 
 module.exports = {
   //tambah user
@@ -42,24 +42,33 @@ module.exports = {
   },
   //get all data user
   async getAll(req, res) {
-    // try {
-    //   const users = await User.findAll();
-    //   const usersWithoutPassword = users.map((user) => {
-    //     const { password, ...userData } = user.toJSON();
-    //     return userData;
-    //   });
-    //   res.status(200).json({
-    //     count: users.length,
-    //     message: "get all user successfully!",
-    //     users: usersWithoutPassword,
-    //   });
-    // } catch (err) {
-    //   console.log(err);
-    // }
-    const response = await fetch("https://api.github.com/users/github");
-    const data = await response.json();
+    try {
+      const APIKey = "Your_Trello_API_Key";
+      const APIToken = "Your_Trello_API_Token";
+      const id = "The_ID_of_Your_Trello_Action";
 
-    console.log(data);
+      const response = await fetch(
+        `https://api.trello.com/1/actions/${id}?key=${APIKey}&token=${APIToken}`,
+        {
+          method: "GET",
+        }
+      );
+
+      const data = await response.json();
+
+      console.log(`Response: ${response.status} ${response.statusText}`);
+      console.log(data);
+
+      // Handle the data as per your requirement
+      res.json(data);
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .json({
+          error: "Something went wrong while fetching data from Trello API.",
+        });
+    }
   },
   //get user profile based on role and id
   async getUser(req, res) {
