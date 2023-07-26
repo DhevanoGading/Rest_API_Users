@@ -9,6 +9,7 @@ require("dotenv").config();
 const APIKey = process.env.API_KEY;
 const APIToken = process.env.API_TOKEN;
 const BaseUrl = process.env.BASE_TRELLO_URL;
+const boardId = process.env.BASE_BOARD_ID;
 const sequelize = require("sequelize");
 const operator = sequelize.Op;
 
@@ -21,16 +22,39 @@ module.exports = {
         return res.status(400).json(errors.array());
       }
 
+      //validasi jika ada data uniwue yang sama pada database
       const validationMessage = await validateKaryawanData(Karyawan, req.body);
       if (validationMessage) {
         return res.status(409).json({ error: validationMessage });
       }
 
+      const responseTrello = await fetch(
+        `${BaseUrl}boards/${boardId}/members/${req.body.karyawanId}?type=normal&key=${APIKey}&token=${APIToken}`,
+        {
+          method: "PUT",
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+
       const result = await Karyawan.create(req.body);
-      res.status(201).json({
-        result,
-        message: "Add karyawan Successfully!",
-      });
+
+      if (responseTrello.ok) {
+        const data = await responseTrello.json();
+
+        res.status(200).json({
+          message: "Add karyawan Successfully!",
+          result,
+          trello: data,
+        });
+      } else {
+        return res.status(201).json({
+          result,
+          message: "Add karyawan Successfully!",
+          trello: "failed to add employee on trello",
+        });
+      }
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: err.message });
@@ -79,8 +103,10 @@ module.exports = {
           trello: data,
         });
       } else {
-        return res.status(responseTrello.status).json({
-          error: "Terjadi kesalahan dalam mengambil data dari Trello API.",
+        return res.status(200).json({
+          message: "Get karyawan Successfully!",
+          karyawan,
+          trello: "Employees are not registered with trello",
         });
       }
     } catch (error) {
@@ -136,25 +162,45 @@ module.exports = {
   },
   //delete karyawan, only admin
   async deleteKaryawaan(req, res) {
-    const { id } = req.params;
+    try {
+      const { id } = req.params;
 
-    const karyawan = await Karyawan.findOne({ where: { karyawanId: id } });
-    if (!karyawan) {
-      return res.status(404).json({ message: "Karyawan not found!" });
-    }
+      const karyawan = await Karyawan.findOne({ where: { karyawanId: id } });
+      if (!karyawan) {
+        return res.status(404).json({ message: "Karyawan not found!" });
+      }
 
-    await Karyawan.destroy({ where: { karyawanId: id } })
-      .then((result) => {
+      const responseTrello = await fetch(
+        `${BaseUrl}boards/${boardId}/members/${id}?key=${APIKey}&token=${APIToken}`,
+        {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+
+      const result = await Karyawan.destroy({ where: { karyawanId: id } });
+
+      if (responseTrello.ok) {
+        const data = await responseTrello.json();
+
         res.status(201).json({
           statusCode: res.statusCode,
           message: "Karyawan has been deleted!",
+          trello: data,
         });
-      })
-      .catch((err) => {
-        res.status(500).json({
-          message: err.message,
+      } else {
+        return res.status(201).json({
+          statusCode: res.statusCode,
+          message: "Karyawan has been deleted!",
+          trello: "failed to remove employee on trello",
         });
-      });
+      }
+    } catch (error) {
+      console.error(err);
+      res.status(500).json({ error: err.message });
+    }
   },
   //search karyawan
   async findKaryawan(req, res) {

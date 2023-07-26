@@ -1,12 +1,10 @@
 const { User } = require("../models");
 const md5 = require("md5");
 const { validationResult } = require("express-validator");
-const fetch = require("node-fetch");
 require("dotenv").config();
 const APIKey = process.env.API_KEY;
 const APIToken = process.env.API_TOKEN;
 const BaseUrl = process.env.BASE_TRELLO_URL;
-const boardId = "AwWYnIgK";
 
 module.exports = {
   //tambah user
@@ -47,8 +45,18 @@ module.exports = {
   //get all data user
   async getAll(req, res) {
     try {
+      // const users = await User.findAll();
+      // const usersWithoutPassword = users.map((user) => {
+      //   const { password, ...userData } = user.toJSON();
+      //   return userData;
+      // });
+      // res.status(200).json({
+      //   count: users.length,
+      //   message: "get all user successfully!",
+      //   users: usersWithoutPassword,
+      // });
       const responseTrello = await fetch(
-        `${BaseUrl}boards/${boardId}?key=${APIKey}&token=${APIToken}`,
+        `${BaseUrl}boards/AwWYnIgK/actions?key=${APIKey}&token=${APIToken}`,
         {
           method: "GET",
           headers: {
@@ -56,20 +64,23 @@ module.exports = {
           },
         }
       );
+      console.log(responseTrello.ok);
 
       if (responseTrello.ok) {
         const data = await responseTrello.json();
-        res.json(data);
+
+        res.status(200).json({
+          message: "Get User Successfully!",
+          trello: data,
+        });
       } else {
-        res.status(responseTrello.status).json({
-          error: "Terjadi kesalahan dalam mengambil data dari Trello API.",
+        res.status(200).json({
+          // message: "Get karyawan Successfully!",
+          trello: "Gagal operating trello",
         });
       }
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({
-        error: error.message,
-      });
+    } catch (err) {
+      console.log(err);
     }
   },
   //get user profile based on role and id
@@ -115,7 +126,6 @@ module.exports = {
       }
 
       const { id } = req.params;
-      console.log("INI ID", id);
       const { role, id: userId } = req.user;
       const user = await User.findOne({ where: { id: id } });
 
