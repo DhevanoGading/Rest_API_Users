@@ -3,7 +3,9 @@ const app = express();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const db = require("./models");
+const cron = require("node-cron");
 
+const { getTrelloActions } = require("./utils/getTrelloActions");
 const authRouter = require("./routes/authentication");
 const userRouter = require("./routes/user");
 const karyawanRouter = require("./routes/karyawan");
@@ -52,6 +54,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/", authRouter);
 app.use("/user", userRouter);
 app.use("/karyawan", karyawanRouter);
+
+cron.schedule("*/10 * * * *", getTrelloActions);
 
 db.sequelize.sync().then((req) => {
   app.listen(PORT, () => {

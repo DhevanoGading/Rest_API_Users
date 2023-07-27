@@ -45,16 +45,6 @@ module.exports = {
   //get all data user
   async getAll(req, res) {
     try {
-      // const users = await User.findAll();
-      // const usersWithoutPassword = users.map((user) => {
-      //   const { password, ...userData } = user.toJSON();
-      //   return userData;
-      // });
-      // res.status(200).json({
-      //   count: users.length,
-      //   message: "get all user successfully!",
-      //   users: usersWithoutPassword,
-      // });
       const responseTrello = await fetch(
         `${BaseUrl}boards/AwWYnIgK/actions?key=${APIKey}&token=${APIToken}`,
         {
@@ -64,7 +54,6 @@ module.exports = {
           },
         }
       );
-      console.log(responseTrello.ok);
 
       if (responseTrello.ok) {
         const data = await responseTrello.json();
@@ -75,7 +64,6 @@ module.exports = {
         });
       } else {
         res.status(200).json({
-          // message: "Get karyawan Successfully!",
           trello: "Gagal operating trello",
         });
       }
