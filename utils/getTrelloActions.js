@@ -3,22 +3,90 @@ const APIKey = process.env.API_KEY;
 const APIToken = process.env.API_TOKEN;
 const BaseUrl = process.env.BASE_TRELLO_URL;
 const boardId = process.env.BASE_BOARD_ID;
-const { Activity } = require("../models");
+const { Action } = require("../models");
 
-const getLastActivity = async () => {
-  try {
-    const latesActivity = await Activity.findOne({
-      order: [["date", "DESC"]],
+const getLastAction = async () => {
+  const latesAction = await Action.findOne({
+    order: [["date", "DESC"]],
+    attributes: ["date"],
+  });
+
+  return latesAction ? latesAction.date : null;
+};
+
+const processGetActions = async (actions) => {
+  const createdActions = [];
+  const updatedActions = [];
+
+  for (const item of actions) {
+    const {
+      id,
+      idMemberCreator,
+      data: { text, card, board, list },
+      type,
+      date,
+      memberCreator: { fullName, username },
+    } = item;
+
+    const actionData = {
+      id,
+      idMemberCreator,
+      text: text ? text : null,
+      cardId: card ? card.id : null,
+      cardName: card ? card.name : null,
+      cardShortLink: card ? card.shortLink : null,
+      boardId: board.id,
+      boardName: board.name,
+      boardShortLink: board.shortLink,
+      listId: list ? list.id : null,
+      listName: list ? list.name : null,
+      type,
+      date,
+      fullName: fullName,
+      username: username,
+    };
+
+    const existingAction = await Action.findOne({
+      where: { id: id },
     });
 
-    if (latesActivity) {
-      return latesActivity.date;
+    if (!existingAction) {
+      await Action.create(actionData);
+      createdActions.push(actionData);
+    } else if (existingAction.text != text) {
+      await Action.update(actionData, {
+        where: { id: id },
+      });
+      updatedActions.push(actionData);
+    }
+  }
+  return { createdActions, updatedActions };
+};
+
+const deleteActionsNotInTrello = async (trelloIds) => {
+  try {
+    const dbIds = await Action.findAll({
+      attributes: ["id"],
+    });
+
+    const idsToDelete = dbIds
+      .map((action) => action.id)
+      .filter((dbId) => !trelloIds.includes(dbId));
+
+    if (idsToDelete.length > 0) {
+      await Action.destroy({
+        where: {
+          id: idsToDelete,
+        },
+      });
+      console.log({
+        message: `Deleted action with id ${idsToDelete}!`,
+      });
     } else {
       return null;
     }
   } catch (error) {
-    console.log(error.message);
-    return null;
+    console.error("Error deleting actions not in Trello:", error);
   }
 };
 
@@ -37,56 +105,40 @@ const getTrelloActions = async () => {
     if (responseTrello.ok) {
       const data = await responseTrello.json();
 
-      let lastPollingTime = await getLastActivity();
-      const lastActivityTime = new Date(lastPollingTime)
-        .toISOString()
-        .slice(0, -5);
+      // let lastPollingTime = await getLastAction();
+      // const lastActionTime = lastPollingTime
+      //   ? new Date(lastPollingTime).toISOString().slice(0, -5)
+      //   : null;
 
-      const newActions = data.filter((action) => {
-        const actionDate = action.date.slice(0, -5);
+      // const newActions = data.filter((action) => {
+      //   const actionDate = action.date.slice(0, -5);
 
-        return !lastPollingTime || actionDate > lastActivityTime;
-      });
+      //   return !lastPollingTime || actionDate > lastActionTime;
+      // });
 
-      if (newActions.length > 0) {
-        for (const item of newActions) {
-          const {
-            id,
-            idMemberCreator,
-            data: { text, card, board, list },
-            type,
-            date,
-            memberCreator: { fullName, username },
-          } = item;
+      // if (newActions.length > 0) {
+      const { createdActions, updatedActions } = await processGetActions(data);
 
-          await Activity.create({
-            id,
-            idMemberCreator,
-            text: text ? text : null,
-            cardId: card ? card.id : null,
-            cardName: card ? card.name : null,
-            cardShortLink: card ? card.shortLink : null,
-            boardId: board.id,
-            boardName: board.name,
-            boardShortLink: board.shortLink,
-            listId: list ? list.id : null,
-            listName: list ? list.name : null,
-            type,
-            date,
-            fullName: fullName,
-            username: username,
-          });
-        }
+      const trelloIds = data.map((action) => action.id);
 
-        return console.log({
+      await deleteActionsNotInTrello(trelloIds);
+
+      if (createdActions.length > 0 || updatedActions.length > 0) {
+        console.log({
           message: "Get New Actions Successfully!",
-          trello: newActions,
+          createdActions,
+          updatedActions,
         });
       } else {
-        return console.log({
-          message: "No New Activities!",
+        console.log({
+          message: "No New and Updated Actions!",
         });
       }
+      // } else {
+      //   console.log({
+      //     message: "No New Actions!",
+      //   });
+      // }
     } else {
       console.log({
         trello: "Operating trello failed!",

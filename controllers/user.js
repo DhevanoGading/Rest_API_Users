@@ -5,6 +5,7 @@ require("dotenv").config();
 const APIKey = process.env.API_KEY;
 const APIToken = process.env.API_TOKEN;
 const BaseUrl = process.env.BASE_TRELLO_URL;
+const boardId = process.env.BASE_BOARD_ID;
 
 module.exports = {
   //tambah user
@@ -46,7 +47,7 @@ module.exports = {
   async getAll(req, res) {
     try {
       const responseTrello = await fetch(
-        `${BaseUrl}boards/AwWYnIgK/actions?key=${APIKey}&token=${APIToken}`,
+        `${BaseUrl}boards/${boardId}/actions?key=${APIKey}&token=${APIToken}`,
         {
           method: "GET",
           headers: {
@@ -70,6 +71,22 @@ module.exports = {
     } catch (err) {
       console.log(err);
     }
+    // try {
+    //   const users = await User.findAll();
+
+    //   const usersWithoutPassword = users.map((user) => {
+    //     const { password, ...userData } = user.toJSON();
+    //     return userData;
+    //   });
+
+    //   res.status(200).json({
+    //     count: users.length,
+    //     message: "get all user successfully!",
+    //     users: usersWithoutPassword,
+    //   });
+    // } catch (err) {
+    //   console.log(err);
+    // }
   },
   //get user profile based on role and id
   async getUser(req, res) {

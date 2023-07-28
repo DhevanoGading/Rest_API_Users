@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const Activity = sequelize.define(
-    "Activity",
+  const Action = sequelize.define(
+    "Action",
     {
       id: {
         type: DataTypes.STRING,
@@ -68,5 +68,5 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
     }
   );
-  return Activity;
+  return Action;
 };

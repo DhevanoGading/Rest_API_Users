@@ -55,7 +55,7 @@ app.use("/", authRouter);
 app.use("/user", userRouter);
 app.use("/karyawan", karyawanRouter);
 
-cron.schedule("*/10 * * * *", getTrelloActions);
+cron.schedule("*/1 * * * *", getTrelloActions);
 
 db.sequelize.sync().then((req) => {
   app.listen(PORT, () => {
