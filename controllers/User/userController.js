@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const { User } = require("../../models");
 const md5 = require("md5");
 const { validationResult } = require("express-validator");
 require("dotenv").config();
@@ -47,7 +47,7 @@ module.exports = {
   async getAll(req, res) {
     try {
       const responseTrello = await fetch(
-        `${BaseUrl}boards/${boardId}/actions?key=${APIKey}&token=${APIToken}`,
+        `${BaseUrl}boards/${boardId}/members?key=${APIKey}&token=${APIToken}`,
         {
           method: "GET",
           headers: {

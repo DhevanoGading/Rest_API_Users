@@ -1,6 +1,6 @@
 const md5 = require("md5");
-const { generateTokens } = require("../utils/auth");
-const { User } = require("../models");
+const { generateTokens } = require("../../middlewares/auth");
+const { User } = require("../../models");
 const { validationResult } = require("express-validator");
 
 module.exports = {

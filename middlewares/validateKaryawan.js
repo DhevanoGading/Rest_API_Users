@@ -6,6 +6,7 @@ isDataExist = async (Karyawan, field, value) => {
 validateKaryawanData = async (Karyawan, data) => {
   const {
     karyawanId,
+    namaLengkap,
     email,
     telegramId,
     nomorTelepon,
@@ -15,6 +16,10 @@ validateKaryawanData = async (Karyawan, data) => {
 
   if (await isDataExist(Karyawan, "karyawanId", karyawanId)) {
     return "Karyawan Id already exists!";
+  }
+
+  if (await isDataExist(Karyawan, "namaLengkap", namaLengkap)) {
+    return "Nama Lengkap already exists!";
   }
 
   if (await isDataExist(Karyawan, "email", email)) {
@@ -43,12 +48,17 @@ validateKaryawanData = async (Karyawan, data) => {
 validateKaryawanUpdate = async (Karyawan, data) => {
   const {
     karyawanId,
+    namaLengkap,
     email,
     telegramId,
     nomorTelepon,
     nomorIdentitas,
     nikKaryawan,
   } = data;
+
+  if (await isDataExist(Karyawan, "namaLengkap", namaLengkap)) {
+    return "Nama Lengkap already exists!";
+  }
 
   if (await isDataExist(Karyawan, "email", email)) {
     return "Email already exists!";

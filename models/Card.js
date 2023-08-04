@@ -1,65 +1,54 @@
 module.exports = (sequelize, DataTypes) => {
-  const Action = sequelize.define(
-    "Action",
+  const Card = sequelize.define(
+    "Card",
     {
       id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
         allowNull: false,
       },
-      idMemberCreator: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      text: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-      },
-      cardId: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      cardName: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      cardShortLink: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      boardId: {
+      idCard: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      boardName: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      boardShortLink: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      listId: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      listName: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      type: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      date: {
+      dateLastActivity: {
         type: "DATE",
         allowNull: false,
       },
-      fullName: {
+      desc: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      idBoard: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      username: {
+      idList: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      idMembers: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      shortLink: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      pos: {
+        type: DataTypes.REAL,
+        allowNull: false,
+      },
+      shortUrl: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      url: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -68,5 +57,5 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
     }
   );
-  return Action;
+  return Card;
 };

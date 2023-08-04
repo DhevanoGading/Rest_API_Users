@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const userController = require("../controllers/user");
-const { body } = require("express-validator");
-const { validateToken } = require("../utils/auth");
-const { userValidator } = require("../utils/inputValidator");
+const userController = require("../controllers/User/userController");
+const { validateToken } = require("../middlewares/auth");
+const { userValidator, roleValidator, userUpdateValidator } = require("../middlewares/inputValidator");
 
 /**
  * @swagger
@@ -44,12 +43,7 @@ const { userValidator } = require("../utils/inputValidator");
  *      200:
  *        description: Add successfully
  */
-router.post(
-  "/",
-  validateToken("admin"),
-  [userValidator, body("role").notEmpty().withMessage(`Role must be filled!`)],
-  userController.addUser
-);
+router.post("/", validateToken("admin"), userValidator, roleValidator, userController.addUser);
 /**
  * @swagger
  * /user:
@@ -123,12 +117,7 @@ router.get("/:id", validateToken(), userController.getUser);
  *              items:
  *                $ref: '#components/schemas/User'
  */
-router.put(
-  "/:id",
-  validateToken(),
-  [userValidator, body("role").notEmpty().withMessage(`Role must be filled!`)],
-  userController.updateUser
-);
+router.put("/:id", validateToken(), userUpdateValidator, userController.updateUser);
 /**
  * @swagger
  * /user/{id}:

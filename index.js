@@ -5,10 +5,15 @@ const cookieParser = require("cookie-parser");
 const db = require("./models");
 const cron = require("node-cron");
 
-const { getTrelloActions } = require("./utils/getTrelloActions");
-const authRouter = require("./routes/authentication");
-const userRouter = require("./routes/user");
-const karyawanRouter = require("./routes/karyawan");
+const { getTrelloActions } = require("./utils/trelloActions");
+const { getTrelloBoard } = require("./utils/trelloBoard");
+const { getTrelloCards } = require("./utils/trelloCards");
+const { getTrelloLists } = require("./utils/trelloLists");
+const { getTrelloMembers } = require("./utils/trelloMembers");
+
+const authRouter = require("./routes/authRoutes");
+const userRouter = require("./routes/userRoutes");
+const karyawanRouter = require("./routes/karyawanRoutes");
 
 require("dotenv").config();
 const PORT = process.env.APP_PORT || 3000;
@@ -55,7 +60,33 @@ app.use("/", authRouter);
 app.use("/user", userRouter);
 app.use("/karyawan", karyawanRouter);
 
-cron.schedule("*/1 * * * *", getTrelloActions);
+// getTrelloActions();
+// getTrelloBoard();
+// getTrelloCards();
+// getTrelloLists();
+// getTrelloMembers();
+
+// const functions = [
+//   getTrelloActions,
+//   getTrelloBoard,
+//   getTrelloCards,
+//   getTrelloLists,
+//   getTrelloMembers,
+// ];
+
+// function delay(ms) {
+//   return new Promise((resolve) => setTimeout(resolve, ms));
+// }
+
+// async function runFunctions() {
+//   for (let i = 0; i < functions.length; i++) {
+//     await functions[i]();
+//     await delay(60000); // Delay of 1 minute
+//   }
+//   runFunctions(); // Loop back to the beginning
+// }
+
+// runFunctions();
 
 db.sequelize.sync().then((req) => {
   app.listen(PORT, () => {

@@ -12,10 +12,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       namaLengkap: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
       },
       tempatLahir: {
         type: DataTypes.STRING,
@@ -25,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       tglLahir: {
-        type: DataTypes.DATE,
+        type: "DATE",
         allowNull: false,
         validate: {
           notEmpty: true,
@@ -183,7 +181,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       tglBergabung: {
-        type: DataTypes.DATE,
+        type: "DATE",
         allowNull: false,
         validate: {
           notEmpty: true,
@@ -210,10 +208,64 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
+      status: {
+        type: DataTypes.ENUM("Active", "InActive"),
+        defaultValue: "Active",
+        allowNull: false,
+      },
+      tglResign: {
+        type: "DATE",
+        allowNull: true,
+      },
+      roleTrello: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      createDate: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      createdBy: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
       timestamps: false,
+      indexes: [
+        {
+          fields: ["namaLengkap"],
+        },
+      ],
     }
   );
+
+  Karyawan.associate = (models) => {
+    Karyawan.hasOne(models.Member, {
+      foreignKey: "namaLengkap",
+      targetKey: "namaLengkap",
+    });
+    Karyawan.hasOne(models.ResignKaryawan, {
+      foreignKey: "karyawanId",
+      targetKey: "karyawanId",
+    });
+    Karyawan.hasMany(models.CutiKaryawan, {
+      foreignKey: "namaLengkap",
+      targetKey: "namaLengkap",
+    });
+    Karyawan.hasMany(models.MutasiKaryawan, {
+      foreignKey: "karyawanId",
+      targetKey: "karyawanId",
+    });
+    Karyawan.hasOne(models.Skill, {
+      foreignKey: "namaLengkap",
+      targetKey: "namaLengkap",
+    });
+    Karyawan.hasMany(models.ChallengeKaryawan, {
+      foreignKey: "karyawanId",
+      targetKey: "karyawanId",
+    });
+  };
+
   return Karyawan;
 };

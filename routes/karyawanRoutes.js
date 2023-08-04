@@ -1,9 +1,41 @@
 const express = require("express");
 const router = express.Router();
-const { validateToken } = require("../utils/auth");
-const { karyawanValidator } = require("../utils/inputValidator");
-const karyawanController = require("../controllers/karyawan");
+const { validateToken } = require("../middlewares/auth");
+const { karyawanValidator, cutiValidator, mutasiValidator, resignValidator } = require("../middlewares/inputValidator");
+const karyawanController = require("../controllers/Karyawan/karyawanController");
+const karyawanResignController =require('../controllers/Karyawan/resignController')
+const karyawanCutiController =require('../controllers/Karyawan/cutiController')
+const karyawanMutasiController =require('../controllers/Karyawan/mutasiController')
+const karyawanSkillController =require('../controllers/Karyawan/skillController')
+const karyawanChallengeController =require('../controllers/Karyawan/challengeController')
 
+// ========================================= RESIGN =========================================
+
+router.get("/resign", validateToken("admin"), karyawanResignController.getAllKaryawanResign);
+router.post("/resign", validateToken("admin"), resignValidator, karyawanResignController.addKaryawanResign);
+
+// ========================================= CUTI =========================================
+
+router.get("/cuti", validateToken("admin"), karyawanCutiController.getAllKaryawanCuti);
+router.post("/cuti", validateToken("admin"), cutiValidator, karyawanCutiController.addKaryawanCuti);
+router.delete("/cuti/:namaLengkap", validateToken("admin"), karyawanCutiController.deleteKaryawanCuti);
+
+// ========================================= MUTASI =========================================
+
+router.get("/mutasi", validateToken("admin"), karyawanMutasiController.getAllKaryawanMutasi);
+router.post("/mutasi", validateToken("admin"), mutasiValidator, karyawanMutasiController.addKaryawanMutasi);
+
+// ========================================= SKILL =========================================
+
+router.get("/skill", validateToken("admin"), karyawanSkillController.getAllKaryawanSkill);
+router.get("/skill/:namaLengkap", validateToken("admin"), karyawanSkillController.getKaryawanSkill);
+router.post("/skill", validateToken("admin"), karyawanSkillController.addKaryawanSkill);
+
+// ========================================= CHALLENGE =========================================
+
+router.get("/challenge", validateToken("admin"), karyawanChallengeController.getAllKaryawanChallenge);
+
+// ========================================= KARYAWAN =========================================
 /**
  * @swagger
  * tags:
@@ -183,12 +215,7 @@ const karyawanController = require("../controllers/karyawan");
  *      200:
  *        description: Register successfully
  */
-router.post(
-  "/",
-  validateToken("admin"),
-  karyawanValidator,
-  karyawanController.addKaryawan
-);
+router.post("/", validateToken("admin"), karyawanValidator, karyawanController.addKaryawan);
 /**
  * @swagger
  * /karyawan:
@@ -234,28 +261,6 @@ router.get("/", validateToken("admin"), karyawanController.getAll);
 router.get("/:id", validateToken("admin"), karyawanController.getKaryawan);
 /**
  * @swagger
- * /karyawan/find:
- *  post:
- *    tags: [Karyawan]
- *    summary: Search karywan
- *    description: This api is used to search karyawan
- *    parameters:
- *      - in: body
- *        name: requestBody
- *        description: Keyword for searching
- *        required: false
- *        schema:
- *          type: object
- *          properties:
- *           keyword:
- *             type: string
- *    responses:
- *      200:
- *        description: karyawan founded!
- */
-router.post("/find", validateToken("admin"), karyawanController.findKaryawan);
-/**
- * @swagger
  * /karyawan/{karyawanId}:
  *  put:
  *    tags: [Karyawan]
@@ -284,12 +289,7 @@ router.post("/find", validateToken("admin"), karyawanController.findKaryawan);
  *              items:
  *                $ref: '#components/schemas/Karyawan'
  */
-router.put(
-  "/:karyawanId",
-  validateToken("admin"),
-  karyawanValidator,
-  karyawanController.updateKaryawan
-);
+router.put("/:karyawanId", validateToken("admin"), karyawanValidator, karyawanController.updateKaryawan);
 /**
  * @swagger
  * /karyawan/{id}:
@@ -308,10 +308,6 @@ router.put(
  *      200:
  *        description: Delete karyawan successfully
  */
-router.delete(
-  "/:id",
-  validateToken("admin"),
-  karyawanController.deleteKaryawaan
-);
+router.delete("/:id", validateToken("admin"), karyawanController.deleteKaryawaan);
 
 module.exports = router;

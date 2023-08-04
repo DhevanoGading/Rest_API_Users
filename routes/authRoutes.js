@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { validateToken } = require("../utils/auth");
-const { userValidator } = require("../utils/inputValidator");
-const authController = require("../controllers/authentication");
+const { validateToken } = require("../middlewares/auth");
+const { userValidator } = require("../middlewares/inputValidator");
+const authController = require("../controllers/Auth/authController");
 
 /**
  * @swagger
@@ -52,7 +52,7 @@ const authController = require("../controllers/authentication");
  *      200:
  *        description: Register successfully
  */
-router.post("/register", [userValidator], authController.registerAdmin);
+router.post("/register", userValidator, authController.registerAdmin);
 /**
  * @swagger
  * /login:

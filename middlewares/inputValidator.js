@@ -9,9 +9,21 @@ exports.userValidator = [
   check("password")
     .notEmpty()
     .withMessage(`Password must be filled!`)
-    .optional({ checkFalsy: true })
     .isLength({ min: 6 })
     .withMessage(`Password at least 6 characters!`),
+];
+
+exports.userUpdateValidator = [
+  check("email")
+    .notEmpty()
+    .withMessage(`Password must be filled!`)
+    .isEmail()
+    .withMessage("Format Email isn't suitable"),
+  check("role").notEmpty().withMessage(`Role must be filled!`),
+];
+
+exports.roleValidator = [
+  check("role").notEmpty().withMessage(`Role must be filled!`),
 ];
 
 exports.karyawanValidator = [
@@ -63,8 +75,24 @@ exports.karyawanValidator = [
   check("penempatan").notEmpty().withMessage("Penempatan must be filled!"),
   check("tglBergabung")
     .notEmpty()
-    .withMessage("Tgl Bergabung must be filled!")
+    .withMessage("Tanggal Bergabung must be filled!")
     .isDate()
     .withMessage("Invalid Date!"),
   check("userRole").notEmpty().withMessage("User Role must be filled!"),
+];
+
+exports.cutiValidator = [
+  check("namaLengkap").notEmpty().withMessage(`Choose a karyawan!`),
+  check("tglCuti").notEmpty().withMessage(`Tanggal Cuti must be filled!`),
+];
+
+exports.mutasiValidator = [
+  check("karyawanId").notEmpty().withMessage(`Choose a karyawan!`),
+  check("divisi").notEmpty().withMessage(`Divisi must be filled!`),
+];
+
+exports.resignValidator = [
+  check("karyawanId").notEmpty().withMessage(`Choose a karyawan!`),
+  check("handover").notEmpty().withMessage(`Handover must be filled!`),
+  check("tglResign").notEmpty().withMessage(`Tanggal Resign must be filled!`),
 ];

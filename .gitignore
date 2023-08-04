@@ -1,3 +1,4 @@
-test.js
+test.txt
 .vscode/
 node_modules/
+.prettierignore

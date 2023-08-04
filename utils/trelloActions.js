@@ -6,12 +6,16 @@ const boardId = process.env.BASE_BOARD_ID;
 const { Action } = require("../models");
 
 const getLastAction = async () => {
-  const latesAction = await Action.findOne({
-    order: [["date", "DESC"]],
-    attributes: ["date"],
-  });
+  try {
+    const latesAction = await Action.findOne({
+      order: [["date", "DESC"]],
+      attributes: ["date"],
+    });
 
-  return latesAction ? latesAction.date : null;
+    return latesAction ? latesAction.date : null;
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 const processGetActions = async (actions) => {
