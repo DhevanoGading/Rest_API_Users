@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { validateToken } = require("../middlewares/auth");
-const { karyawanValidator, cutiValidator, mutasiValidator, resignValidator } = require("../middlewares/inputValidator");
+const { karyawanValidator, cutiValidator, mutasiValidator, resignValidator, challengeValidator } = require("../middlewares/inputValidator");
 const karyawanController = require("../controllers/Karyawan/karyawanController");
 const karyawanResignController =require('../controllers/Karyawan/resignController')
 const karyawanCutiController =require('../controllers/Karyawan/cutiController')
@@ -30,10 +30,12 @@ router.post("/mutasi", validateToken("admin"), mutasiValidator, karyawanMutasiCo
 router.get("/skill", validateToken("admin"), karyawanSkillController.getAllKaryawanSkill);
 router.get("/skill/:namaLengkap", validateToken("admin"), karyawanSkillController.getKaryawanSkill);
 router.post("/skill", validateToken("admin"), karyawanSkillController.addKaryawanSkill);
+router.put("/skill/:namaLengkap", validateToken("admin"), karyawanSkillController.updateSkillKaryawan);
 
 // ========================================= CHALLENGE =========================================
 
 router.get("/challenge", validateToken("admin"), karyawanChallengeController.getAllKaryawanChallenge);
+router.post("/challenge", validateToken("admin"), challengeValidator, karyawanChallengeController.addKaryawanChallenge);
 
 // ========================================= KARYAWAN =========================================
 /**

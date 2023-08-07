@@ -21,7 +21,7 @@ module.exports = {
           "penempatan",
           "telegramId",
           [sequelize.col("ResignKaryawan.createdBy"), "createdBy"],
-          "createDate",
+          "createdDate",
           "pendidikanAkhir",
           "namaInstitusi",
           "status",

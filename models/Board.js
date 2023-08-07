@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      desc: {
-        type: DataTypes.STRING,
-        allowNull: false,
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: true,
       },
       idOrganization: {
         type: DataTypes.STRING,
@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
       shortUrl: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      dateLastActivity: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
     },
     {

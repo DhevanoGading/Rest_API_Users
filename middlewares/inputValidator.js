@@ -96,3 +96,10 @@ exports.resignValidator = [
   check("handover").notEmpty().withMessage(`Handover must be filled!`),
   check("tglResign").notEmpty().withMessage(`Tanggal Resign must be filled!`),
 ];
+
+exports.challengeValidator = [
+  check("karyawanId").notEmpty().withMessage(`Choose a karyawan!`),
+  check("posisi").notEmpty().withMessage(`Posisi must be filled!`),
+  check("start").notEmpty().withMessage(`Start Challenge must be filled!`),
+  check("end").notEmpty().withMessage(`End Challenge must be filled!`),
+];

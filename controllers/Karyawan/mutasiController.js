@@ -43,7 +43,8 @@ module.exports = {
         return res.status(400).json(errors.array());
       }
 
-      const { karyawanId, divisi, createdBy, tglMutasi, keterangan } = req.body;
+      const createdBy = req.user.email;
+      const { karyawanId, divisi, tglMutasi, keterangan } = req.body;
 
       const karyawan = await Karyawan.findOne({
         where: { karyawanId },
@@ -55,7 +56,13 @@ module.exports = {
         });
       }
 
-      const result = await MutasiKaryawan.create(req.body);
+      const result = await MutasiKaryawan.create({
+        karyawanId,
+        divisi,
+        createdBy,
+        tglMutasi,
+        keterangan,
+      });
 
       await Karyawan.update({ divisi }, { where: { karyawanId } });
 

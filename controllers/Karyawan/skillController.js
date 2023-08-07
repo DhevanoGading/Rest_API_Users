@@ -42,9 +42,17 @@ module.exports = {
         where: { namaLengkap },
       });
 
+      const hadSkill = await Skill.findOne({
+        where: { namaLengkap },
+      });
+
       if (!karyawan) {
         return res.status(404).json({
           message: `Karyawan with name ${namaLengkap} not found!`,
+        });
+      } else if (!hadSkill) {
+        return res.status(404).json({
+          message: `Karyawan ${namaLengkap} not have skill data!`,
         });
       }
 
@@ -83,7 +91,6 @@ module.exports = {
     try {
       const { namaLengkap, skill } = req.body;
       const createdBy = req.user.email;
-      console.log(namaLengkap);
 
       const hadSkill = await Skill.findOne({
         where: { namaLengkap },
@@ -108,6 +115,45 @@ module.exports = {
       res.status(200).json({
         message: "Add Skill Karyawan Successfully!",
         result,
+      });
+    } catch (error) {
+      console.error("Error executing query:", error);
+      res.status(500).json({
+        message: "Error executing query",
+        error: error.message,
+      });
+    }
+  },
+  async updateSkillKaryawan(req, res) {
+    try {
+      const { namaLengkap } = req.params;
+      const { skill } = req.body;
+
+      const karyawan = await Karyawan.findOne({
+        where: { namaLengkap },
+      });
+
+      const hadSkill = await Skill.findOne({
+        where: { namaLengkap },
+      });
+
+      if (!karyawan) {
+        return res.status(404).json({
+          message: `Karyawan with name ${namaLengkap} not found!`,
+        });
+      } else if (!hadSkill) {
+        return res.status(404).json({
+          message: `Karyawan ${namaLengkap} not have skill data!`,
+        });
+      }
+
+      await Skill.update({ skill }, { where: { namaLengkap } });
+
+      const updated = await Skill.findOne({ where: { namaLengkap } });
+
+      res.status(200).json({
+        message: "Update Skill Karyawan Successfully!",
+        updated,
       });
     } catch (error) {
       console.error("Error executing query:", error);

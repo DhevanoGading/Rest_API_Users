@@ -93,7 +93,7 @@ module.exports = {
     try {
       const { id } = req.params;
       const tokenUserId = req.user.id;
-      const role = req.user.role;
+      const { role } = req.user;
 
       const user = await User.findOne({
         where: { id: id },

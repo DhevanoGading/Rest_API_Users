@@ -569,7 +569,7 @@ const karyawan = await Karyawan.findOne({
     "penempatan",
     "telegramId",
     "createdBy",
-    "createDate",
+    "createdDate",
     "pendidikanAkhir",
     "namaInstitusi",
     "tempatlahir",

@@ -35,7 +35,7 @@ module.exports = {
           "penempatan",
           "telegramId",
           "createdBy",
-          "createDate",
+          "createdDate",
           "pendidikanAkhir",
           "namaInstitusi",
           "tempatlahir",
@@ -88,13 +88,11 @@ module.exports = {
   //tambah karyawan
   async addKaryawan(req, res) {
     try {
-      //validasi input
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json(errors.array());
       }
 
-      // validasi jika ada data uniwue yang sama pada database
       const validationMessage = await validateKaryawanData(Karyawan, req.body);
       if (validationMessage) {
         return res.status(409).json({ error: validationMessage });
@@ -183,7 +181,7 @@ module.exports = {
           [sequelize.col("Karyawan.penempatan"), "penempatan"],
           [sequelize.col("Karyawan.telegramId"), "telegramId"],
           [sequelize.col("Karyawan.createdBy"), "createdBy"],
-          [sequelize.col("Karyawan.createDate"), "createDate"],
+          [sequelize.col("Karyawan.createdDate"), "createdDate"],
           [sequelize.col("Karyawan.pendidikanAkhir"), "pendidikanAkhir"],
           [sequelize.col("Karyawan.namaInstitusi"), "namaInstitusi"],
           [sequelize.col("Karyawan.tempatLahir"), "tempatLahir"],
@@ -200,7 +198,7 @@ module.exports = {
             attributes: [],
           },
         ],
-        where: { namaLengkap: namaLengkap },
+        where: { namaLengkap },
       });
 
       if (!karyawan) {

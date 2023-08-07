@@ -221,7 +221,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      createDate: {
+      createdDate: {
         type: DataTypes.STRING,
         allowNull: true,
       },
