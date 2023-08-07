@@ -45,48 +45,48 @@ module.exports = {
   },
   //get all data user
   async getAll(req, res) {
-    try {
-      const responseTrello = await fetch(
-        `${BaseUrl}boards/${boardId}/members?key=${APIKey}&token=${APIToken}`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-          },
-        }
-      );
-
-      if (responseTrello.ok) {
-        const data = await responseTrello.json();
-
-        res.status(200).json({
-          message: "Get User Successfully!",
-          trello: data,
-        });
-      } else {
-        res.status(200).json({
-          trello: "Gagal operating trello",
-        });
-      }
-    } catch (err) {
-      console.log(err);
-    }
     // try {
-    //   const users = await User.findAll();
+    //   const responseTrello = await fetch(
+    //     `${BaseUrl}boards/${boardId}/members?key=${APIKey}&token=${APIToken}`,
+    //     {
+    //       method: "GET",
+    //       headers: {
+    //         Accept: "application/json",
+    //       },
+    //     }
+    //   );
 
-    //   const usersWithoutPassword = users.map((user) => {
-    //     const { password, ...userData } = user.toJSON();
-    //     return userData;
-    //   });
+    //   if (responseTrello.ok) {
+    //     const data = await responseTrello.json();
 
-    //   res.status(200).json({
-    //     count: users.length,
-    //     message: "get all user successfully!",
-    //     users: usersWithoutPassword,
-    //   });
+    //     res.status(200).json({
+    //       message: "Get User Successfully!",
+    //       trello: data,
+    //     });
+    //   } else {
+    //     res.status(200).json({
+    //       trello: "Gagal operating trello",
+    //     });
+    //   }
     // } catch (err) {
     //   console.log(err);
     // }
+    try {
+      const users = await User.findAll();
+
+      const usersWithoutPassword = users.map((user) => {
+        const { password, ...userData } = user.toJSON();
+        return userData;
+      });
+
+      res.status(200).json({
+        count: users.length,
+        message: "get all user successfully!",
+        users: usersWithoutPassword,
+      });
+    } catch (err) {
+      console.log(err);
+    }
   },
   //get user profile based on role and id
   async getUser(req, res) {
