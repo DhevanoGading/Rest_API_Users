@@ -223,11 +223,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       createdDate: {
         type: DataTypes.STRING,
-        allowNull: true,
+        defaultValue: new Date().toISOString().slice(0, 10),
       },
       createdBy: {
         type: DataTypes.STRING,
-        allowNull: true,
+        defaultValue: "arief.dolants",
       },
     },
     {

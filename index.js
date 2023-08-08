@@ -37,7 +37,7 @@ const option = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Node JS API User with MySQL",
+      title: "Node JS API Karyawan with MySQL",
       version: "1.0.0",
     },
     servers: [
@@ -47,9 +47,9 @@ const option = {
     ],
   },
   apis: [
-    "./routes/authentication.js",
-    "./routes/user.js",
-    "./routes/karyawan.js",
+    "./routes/authRoutes.js",
+    "./routes/userRoutes.js",
+    "./routes/karyawanRoutes.js",
   ],
 };
 

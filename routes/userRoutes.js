@@ -137,27 +137,5 @@ router.put("/:id", validateToken(), userUpdateValidator, userController.updateUs
  *        description: Delete user successfully
  */
 router.delete("/:id", validateToken("admin"), userController.deleteUser);
-/**
- * @swagger
- * /user/find:
- *  post:
- *    tags: [User]
- *    summary: Search user
- *    description: This api is used to search user
- *    parameters:
- *      - in: body
- *        name: requestBody
- *        description: Keyword for searching
- *        required: false
- *        schema:
- *          type: object
- *          properties:
- *           keyword:
- *             type: string
- *    responses:
- *      200:
- *        description: user founded!
- */
-router.post("/find", validateToken("admin"), userController.findUser);
 
 module.exports = router;
