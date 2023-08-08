@@ -566,8 +566,6 @@ router.post("/challenge", validateToken("admin"), challengeValidator, karyawanCh
  *           format: date
  *         email:
  *           type: string
- *         password:
- *           type: string
  *         telegramId:
  *           type: string
  *         nomorTelepon:

@@ -99,7 +99,7 @@ module.exports = {
         where: { id: id },
       });
       if (!user) {
-        return res.status(404).json({ message: "Karyawan not found!" });
+        return res.status(404).json({ message: "User not found!" });
       }
 
       if (role === "admin") {

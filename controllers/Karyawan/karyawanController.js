@@ -136,9 +136,17 @@ module.exports = {
           trelloMember,
         });
       } else {
-        return res.status(404).json({
-          message: "Karyawan Id (username) not found on trello!",
+        const result = await Karyawan.create(req.body);
+
+        res.status(200).json({
+          message: "Add karyawan Successfully!",
+          trello: "karyawan not added on trello",
+          result,
         });
+
+        // return res.status(404).json({
+        //   message: "Karyawan Id (username) not found on trello!",
+        // });
       }
     } catch (err) {
       console.error(err);
@@ -150,55 +158,113 @@ module.exports = {
     try {
       const { id } = req.params;
 
-      const findMember = await Karyawan.findOne({
-        attributes: ["namaLengkap"],
-        where: {
-          karyawanId: id,
-        },
-      });
+      // const findMember = await Karyawan.findOne({
+      //   attributes: ["namaLengkap"],
+      //   where: {
+      //     karyawanId: id,
+      //   },
+      // });
 
-      if (!findMember) {
-        return res.status(404).json({ message: "Member not found!" });
-      }
+      // if (!findMember) {
+      //   return res.status(404).json({ message: "Member not found!" });
+      // }
 
-      const { namaLengkap } = findMember.dataValues;
+      // const { namaLengkap } = findMember.dataValues;
 
-      const karyawan = await Member.findOne({
+      // const karyawan = await Member.findOne({
+      //   attributes: [
+      //     [sequelize.col("Karyawan.karyawanId"), "karyawanId"],
+      //     "namaLengkap",
+      //     [sequelize.col("Karyawan.statusPernikahan"), "statusPernikahan"],
+      //     [sequelize.col("Karyawan.nikKaryawan"), "nikKaryawan"],
+      //     [sequelize.col("Karyawan.nomorIdentitas"), "nomorIdentitas"],
+      //     [sequelize.col("Karyawan.divisi"), "divisi"],
+      //     [sequelize.col("Karyawan.tglBergabung"), "tglBergabung"],
+      //     [sequelize.col("Karyawan.statusKaryawan"), "statusKaryawan"],
+      //     [sequelize.col("Karyawan.email"), "email"],
+      //     [sequelize.col("Karyawan.nomorTelepon"), "nomorTelepon"],
+      //     [sequelize.col("Karyawan.alamatKTP"), "alamatKTP"],
+      //     [sequelize.col("Karyawan.posisi"), "posisi"],
+      //     [sequelize.col("Karyawan.resource"), "resource"],
+      //     [sequelize.col("Karyawan.penempatan"), "penempatan"],
+      //     [sequelize.col("Karyawan.telegramId"), "telegramId"],
+      //     [sequelize.col("Karyawan.createdBy"), "createdBy"],
+      //     [sequelize.col("Karyawan.createdDate"), "createdDate"],
+      //     [sequelize.col("Karyawan.pendidikanAkhir"), "pendidikanAkhir"],
+      //     [sequelize.col("Karyawan.namaInstitusi"), "namaInstitusi"],
+      //     [sequelize.col("Karyawan.tempatLahir"), "tempatLahir"],
+      //     [sequelize.col("Karyawan.tglLahir"), "tglLahir"],
+      //     [sequelize.col("Karyawan.status"), "status"],
+      //     [sequelize.col("Karyawan.roleTrello"), "roleTrello"],
+      //     [sequelize.col("Karyawan.jurusan"), "jurusan"],
+      //     [sequelize.col("Karyawan.createdBy"), "createdBy"],
+      //     "username",
+      //     [sequelize.col("Karyawan.userRole"), "userRole"],
+      //   ],
+      //   include: [
+      //     {
+      //       model: Karyawan,
+      //       attributes: [],
+      //     },
+      //   ],
+      //   where: { namaLengkap },
+      // });
+
+      const karyawan = await Karyawan.findOne({
         attributes: [
-          [sequelize.col("Karyawan.karyawanId"), "karyawanId"],
+          "karyawanId",
           "namaLengkap",
-          [sequelize.col("Karyawan.statusPernikahan"), "statusPernikahan"],
-          [sequelize.col("Karyawan.nikKaryawan"), "nikKaryawan"],
-          [sequelize.col("Karyawan.nomorIdentitas"), "nomorIdentitas"],
-          [sequelize.col("Karyawan.divisi"), "divisi"],
-          [sequelize.col("Karyawan.tglBergabung"), "tglBergabung"],
-          [sequelize.col("Karyawan.statusKaryawan"), "statusKaryawan"],
-          [sequelize.col("Karyawan.email"), "email"],
-          [sequelize.col("Karyawan.nomorTelepon"), "nomorTelepon"],
-          [sequelize.col("Karyawan.alamatKTP"), "alamatKTP"],
-          [sequelize.col("Karyawan.posisi"), "posisi"],
-          [sequelize.col("Karyawan.resource"), "resource"],
-          [sequelize.col("Karyawan.penempatan"), "penempatan"],
-          [sequelize.col("Karyawan.telegramId"), "telegramId"],
-          [sequelize.col("Karyawan.createdBy"), "createdBy"],
-          [sequelize.col("Karyawan.createdDate"), "createdDate"],
-          [sequelize.col("Karyawan.pendidikanAkhir"), "pendidikanAkhir"],
-          [sequelize.col("Karyawan.namaInstitusi"), "namaInstitusi"],
-          [sequelize.col("Karyawan.tempatLahir"), "tempatLahir"],
-          [sequelize.col("Karyawan.status"), "status"],
-          [sequelize.col("Karyawan.roleTrello"), "roleTrello"],
-          [sequelize.col("Karyawan.jurusan"), "jurusan"],
-          [sequelize.col("Karyawan.createdBy"), "createdBy"],
-          "username",
-          [sequelize.col("Karyawan.userRole"), "userRole"],
+          "statusPernikahan",
+          "nikKaryawan",
+          "nomorIdentitas",
+          "divisi",
+          "tglBergabung",
+          "statusKaryawan",
+          "email",
+          "nomorTelepon",
+          "alamatKTP",
+          "posisi",
+          "resource",
+          "penempatan",
+          "telegramId",
+          "createdBy",
+          "createdDate",
+          "pendidikanAkhir",
+          "namaInstitusi",
+          "tempatlahir",
+          "tglLahir",
+          "status",
+          "roleTrello",
+          "nikkaryawan",
+          "jurusan",
+          [sequelize.col("Member.username"), "trelloUsername"],
+          "userRole",
+          [
+            sequelize.literal("TIMESTAMPDIFF( YEAR, tglBergabung, NOW() )"),
+            "year",
+          ],
+          [
+            sequelize.literal(
+              "TIMESTAMPDIFF( MONTH, tglBergabung, NOW() ) % 12"
+            ),
+            "month",
+          ],
+          [
+            sequelize.literal(
+              "FLOOR( TIMESTAMPDIFF( DAY, tglBergabung, NOW() ) % 30.4375 )"
+            ),
+            "day",
+          ],
         ],
         include: [
           {
-            model: Karyawan,
+            model: Member,
             attributes: [],
           },
         ],
-        where: { namaLengkap },
+        where: {
+          karyawanId: id,
+        },
       });
 
       if (!karyawan) {
