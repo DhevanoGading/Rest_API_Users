@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       karyawanId: {
         type: DataTypes.STRING,
+        allowNull: false,
       },
       posisi: {
         type: DataTypes.STRING,
@@ -24,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       createdDate: {
         type: DataTypes.DATE,
         allowNull: true,
+        defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
       },
     },
     {
@@ -35,7 +37,6 @@ module.exports = (sequelize, DataTypes) => {
     ChallengeKaryawan.belongsTo(models.Karyawan, {
       foreignKey: "karyawanId",
       targetKey: "karyawanId",
-      onDelete: "SET NULL",
       onUpdate: "CASCADE",
     });
   };

@@ -103,3 +103,24 @@ exports.challengeValidator = [
   check("start").notEmpty().withMessage(`Start Challenge must be filled!`),
   check("end").notEmpty().withMessage(`End Challenge must be filled!`),
 ];
+
+exports.assignmentValidator = [
+  check("karyawanId").notEmpty().withMessage(`Choose a karyawan!`),
+  check("boardId").notEmpty().withMessage(`Choose a Project!`),
+  check("pm").notEmpty().withMessage(`Choose a Project Manager!`),
+  check("assignmentType")
+    .notEmpty()
+    .withMessage(`Assignment Type must be filled!`),
+  check("assignmentDate")
+    .notEmpty()
+    .withMessage(`Assignment Date must be filled!`),
+];
+
+exports.updateAssignmentValidator = [
+  check("assignmentType")
+    .notEmpty()
+    .withMessage(`Assignment Type must be filled!`),
+  check("assignmentDate")
+    .notEmpty()
+    .withMessage(`Assignment Date must be filled!`),
+];

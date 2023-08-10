@@ -168,7 +168,7 @@ module.exports = {
       });
 
       if (rowsAffected === 0) {
-        return res.status(200).json({ error: "Nothing to Update!" });
+        return res.status(200).json({ message: "Nothing to Update!" });
       }
 
       const responseData = { ...dataUser };

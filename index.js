@@ -14,6 +14,7 @@ const { getTrelloMembers } = require("./utils/trelloMembers");
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
 const karyawanRouter = require("./routes/karyawanRoutes");
+const dashboardPmoRouter = require("./routes/dashboardPmoRoutes");
 
 require("dotenv").config();
 const PORT = process.env.APP_PORT || 3000;
@@ -59,6 +60,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/", authRouter);
 app.use("/user", userRouter);
 app.use("/karyawan", karyawanRouter);
+app.use("/dashboard-pmo", dashboardPmoRouter);
 
 // getTrelloActions();
 // getTrelloBoard();

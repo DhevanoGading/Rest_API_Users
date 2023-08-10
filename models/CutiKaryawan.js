@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       namaLengkap: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       tglCuti: {
         type: "DATE",
@@ -24,7 +24,6 @@ module.exports = (sequelize, DataTypes) => {
     CutiKaryawan.belongsTo(models.Karyawan, {
       foreignKey: "namaLengkap",
       targetKey: "namaLengkap",
-      onDelete: "SET NULL",
       onUpdate: "CASCADE",
     });
   };

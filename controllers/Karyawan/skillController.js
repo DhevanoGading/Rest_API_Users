@@ -147,7 +147,14 @@ module.exports = {
         });
       }
 
-      await Skill.update({ skill }, { where: { namaLengkap } });
+      const [result] = await Skill.update(
+        { skill },
+        { where: { namaLengkap } }
+      );
+
+      if (result === 0) {
+        return res.status(200).json({ message: "Nothing to update!" });
+      }
 
       const updated = await Skill.findOne({ where: { namaLengkap } });
 

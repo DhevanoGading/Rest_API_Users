@@ -36,7 +36,6 @@ module.exports = (sequelize, DataTypes) => {
     MutasiKaryawan.belongsTo(models.Karyawan, {
       foreignKey: "karyawanId",
       targetKey: "karyawanId",
-      onDelete: "SET NULL",
       onUpdate: "CASCADE",
     });
   };

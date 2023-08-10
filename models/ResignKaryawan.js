@@ -33,7 +33,6 @@ module.exports = (sequelize, DataTypes) => {
     ResignKaryawan.belongsTo(models.Karyawan, {
       foreignKey: "karyawanId",
       targetKey: "karyawanId",
-      onDelete: "SET NULL",
       onUpdate: "CASCADE",
     });
   };

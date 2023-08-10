@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const Member = sequelize.define(
-    "Member",
+  const TrelloKaryawan = sequelize.define(
+    "TrelloKaryawan",
     {
       id: {
         type: DataTypes.STRING,
@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       namaLengkap: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: true,
       },
       username: {
@@ -21,8 +22,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  Member.associate = (models) => {
-    Member.belongsTo(models.Karyawan, {
+  TrelloKaryawan.associate = (models) => {
+    TrelloKaryawan.belongsTo(models.Karyawan, {
       foreignKey: "namaLengkap",
       targetKey: "namaLengkap",
       onDelete: "SET NULL",
@@ -30,5 +31,5 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
-  return Member;
+  return TrelloKaryawan;
 };

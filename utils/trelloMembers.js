@@ -3,7 +3,7 @@ const APIKey = process.env.API_KEY;
 const APIToken = process.env.API_TOKEN;
 const BaseUrl = process.env.BASE_TRELLO_URL;
 const boardId = process.env.BASE_BOARD_ID;
-const { Member } = require("../models");
+const { TrelloKaryawan } = require("../models");
 
 const processGetMembers = async (members) => {
   const createdMembers = [];
@@ -18,11 +18,11 @@ const processGetMembers = async (members) => {
       username,
     };
 
-    const existingMember = await Member.findOne({
+    const existingMember = await TrelloKaryawan.findOne({
       where: { id: id },
     });
     if (!existingMember) {
-      await Member.create(memberData);
+      await TrelloKaryawan.create(memberData);
       createdMembers.push(memberData);
     } else {
       const isDiff =
@@ -32,7 +32,9 @@ const processGetMembers = async (members) => {
         false;
 
       if (isDiff) {
-        await Member.update(memberData, { where: { id: memberData.id } });
+        await TrelloKaryawan.update(memberData, {
+          where: { id: memberData.id },
+        });
         updatedMembers.push(memberData);
       }
     }
@@ -42,7 +44,7 @@ const processGetMembers = async (members) => {
 
 const deleteMembersNotInTrello = async (trelloIds) => {
   try {
-    const dbIds = await Member.findAll({
+    const dbIds = await TrelloKaryawan.findAll({
       attributes: ["id"],
     });
 
@@ -51,7 +53,7 @@ const deleteMembersNotInTrello = async (trelloIds) => {
       .filter((dbId) => !trelloIds.includes(dbId));
 
     if (idsToDelete.length > 0) {
-      await Member.destroy({
+      await TrelloKaryawan.destroy({
         where: {
           id: idsToDelete,
         },

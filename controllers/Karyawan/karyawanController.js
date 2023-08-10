@@ -1,4 +1,4 @@
-const { Karyawan, Member } = require("../../models");
+const { Karyawan, TrelloKaryawan } = require("../../models");
 const { validationResult } = require("express-validator");
 const {
   validateKaryawanData,
@@ -44,7 +44,7 @@ module.exports = {
           "roleTrello",
           "nikkaryawan",
           "jurusan",
-          [sequelize.col("Member.username"), "trelloUsername"],
+          [sequelize.col("TrelloKaryawan.username"), "trelloUsername"],
           "userRole",
           [
             sequelize.literal("TIMESTAMPDIFF( YEAR, tglBergabung, NOW() )"),
@@ -65,7 +65,7 @@ module.exports = {
         ],
         include: [
           {
-            model: Member,
+            model: TrelloKaryawan,
             attributes: [],
           },
         ],
@@ -124,14 +124,14 @@ module.exports = {
           }
         }
 
-        const trelloMember = await Member.create({
+        const trelloMember = await TrelloKaryawan.create({
           id: foundMember.id,
           namaLengkap: req.body.namaLengkap,
           username: desiredUsername,
         });
 
         res.status(200).json({
-          message: "Add karyawan and Trello Member Successfully!",
+          message: "Add karyawan and Trello TrelloKaryawan Successfully!",
           result,
           trelloMember,
         });
@@ -166,12 +166,12 @@ module.exports = {
       // });
 
       // if (!findMember) {
-      //   return res.status(404).json({ message: "Member not found!" });
+      //   return res.status(404).json({ message: "TrelloKaryawan not found!" });
       // }
 
       // const { namaLengkap } = findMember.dataValues;
 
-      // const karyawan = await Member.findOne({
+      // const karyawan = await TrelloKaryawan.findOne({
       //   attributes: [
       //     [sequelize.col("Karyawan.karyawanId"), "karyawanId"],
       //     "namaLengkap",
@@ -237,7 +237,7 @@ module.exports = {
           "roleTrello",
           "nikkaryawan",
           "jurusan",
-          [sequelize.col("Member.username"), "trelloUsername"],
+          [sequelize.col("TrelloKaryawan.username"), "trelloUsername"],
           "userRole",
           [
             sequelize.literal("TIMESTAMPDIFF( YEAR, tglBergabung, NOW() )"),
@@ -258,7 +258,7 @@ module.exports = {
         ],
         include: [
           {
-            model: Member,
+            model: TrelloKaryawan,
             attributes: [],
           },
         ],
@@ -311,7 +311,7 @@ module.exports = {
       });
 
       if (updatedRows === 0) {
-        return res.status(200).json({ error: "Nothing to update!" });
+        return res.status(200).json({ message: "Nothing to update!" });
       }
 
       res.status(201).json({

@@ -17,21 +17,21 @@ module.exports = (sequelize, DataTypes) => {
       },
       tempatLahir: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         validate: {
           notEmpty: true,
         },
       },
       tglLahir: {
         type: "DATE",
-        allowNull: false,
+        allowNull: true,
         validate: {
           notEmpty: true,
         },
       },
       email: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: true,
         validate: {
           notEmpty: true,
@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       telegramId: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: true,
         validate: {
           notEmpty: true,
@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       nomorTelepon: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: true,
         validate: {
           notEmpty: true,
@@ -55,14 +55,14 @@ module.exports = (sequelize, DataTypes) => {
       },
       jenisIdentitas: {
         type: DataTypes.ENUM("KTP", "SIM"),
-        allowNull: false,
+        allowNull: true,
         validate: {
           notEmpty: true,
         },
       },
       nomorIdentitas: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: true,
         validate: {
           notEmpty: true,
@@ -70,14 +70,14 @@ module.exports = (sequelize, DataTypes) => {
       },
       statusPernikahan: {
         type: DataTypes.ENUM("Lajang", "Menikah", "Janda", "Duda"),
-        allowNull: false,
+        allowNull: true,
         validate: {
           notEmpty: true,
         },
       },
       alamatKtp: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
         validate: {
           notEmpty: true,
         },
@@ -92,43 +92,61 @@ module.exports = (sequelize, DataTypes) => {
           "S2",
           "S3"
         ),
-        allowNull: false,
+        allowNull: true,
         validate: {
           notEmpty: true,
         },
       },
       namaInstitusi: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         validate: {
           notEmpty: true,
         },
       },
       jurusan: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         validate: {
           notEmpty: true,
         },
       },
       nikKaryawan: {
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
+        allowNull: true,
         validate: {
           notEmpty: true,
         },
       },
       divisi: {
-        type: DataTypes.ENUM("RMO", "PMO", "BSO", "SDO", "DSO", "KMO", "BO"),
+        type: DataTypes.ENUM(
+          "RMO",
+          "PMO",
+          "BSO",
+          "SDO",
+          "DSO",
+          "KMO",
+          "BO",
+          "Quality Control"
+        ),
         allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
       resource: {
-        type: DataTypes.ENUM("RMO", "PMO", "BSO", "SDO", "DSO", "KMO", "BO"),
+        type: DataTypes.ENUM(
+          "RMO",
+          "PMO",
+          "BSO",
+          "SDO",
+          "DSO",
+          "KMO",
+          "BO",
+          "QC"
+        ),
         allowNull: false,
+        defaultValue: "RMO",
         validate: {
           notEmpty: true,
         },
@@ -168,7 +186,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       statusKaryawan: {
         type: DataTypes.ENUM("Permanent", "Fixed-term contracts", "Freelance"),
-        allowNull: false,
+        allowNull: true,
         validate: {
           notEmpty: true,
         },
@@ -241,7 +259,7 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Karyawan.associate = (models) => {
-    Karyawan.hasOne(models.Member, {
+    Karyawan.hasOne(models.TrelloKaryawan, {
       foreignKey: "namaLengkap",
       targetKey: "namaLengkap",
     });
@@ -262,6 +280,10 @@ module.exports = (sequelize, DataTypes) => {
       targetKey: "namaLengkap",
     });
     Karyawan.hasMany(models.ChallengeKaryawan, {
+      foreignKey: "karyawanId",
+      targetKey: "karyawanId",
+    });
+    Karyawan.hasMany(models.AssignmentKaryawan, {
       foreignKey: "karyawanId",
       targetKey: "karyawanId",
     });

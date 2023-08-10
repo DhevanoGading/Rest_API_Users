@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   const Board = sequelize.define(
     "Board",
     {
-      id: {
+      boardId: {
         type: DataTypes.STRING,
         primaryKey: true,
         allowNull: false,
@@ -36,5 +36,17 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
     }
   );
+
+  Board.associate = (models) => {
+    Board.hasMany(models.AssignmentKaryawan, {
+      foreignKey: "boardId",
+      targetKey: "boardId",
+    });
+    Board.hasOne(models.ProjectSetting, {
+      foreignKey: "boardId",
+      targetKey: "boardId",
+    });
+  };
+
   return Board;
 };

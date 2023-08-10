@@ -1,13 +1,22 @@
 const express = require("express");
 const router = express.Router();
 const { validateToken } = require("../middlewares/auth");
-const { karyawanValidator, cutiValidator, mutasiValidator, resignValidator, challengeValidator } = require("../middlewares/inputValidator");
+const { 
+    karyawanValidator, 
+    cutiValidator, 
+    mutasiValidator, 
+    resignValidator, 
+    challengeValidator, 
+    assignmentValidator, 
+    updateAssignmentValidator 
+} = require("../middlewares/inputValidator");
 const karyawanController = require("../controllers/Karyawan/karyawanController");
-const karyawanResignController =require('../controllers/Karyawan/resignController')
-const karyawanCutiController =require('../controllers/Karyawan/cutiController')
-const karyawanMutasiController =require('../controllers/Karyawan/mutasiController')
-const karyawanSkillController =require('../controllers/Karyawan/skillController')
-const karyawanChallengeController =require('../controllers/Karyawan/challengeController')
+const karyawanResignController = require('../controllers/Karyawan/resignController')
+const karyawanCutiController = require('../controllers/Karyawan/cutiController')
+const karyawanMutasiController = require('../controllers/Karyawan/mutasiController')
+const karyawanSkillController = require('../controllers/Karyawan/skillController')
+const karyawanChallengeController = require('../controllers/Karyawan/challengeController')
+const assignmentController = require("../controllers/Assignment/assignmentController");
 
 // ========================================= RESIGN =========================================
 /**
@@ -527,7 +536,7 @@ router.get("/challenge", validateToken("admin"), karyawanChallengeController.get
  */
 /**
  * @swagger
- * /karyawan/Challenge:
+ * /karyawan/challenge:
  *  post:
  *    tags: [Challenge]
  *    summary: Add Challenge Karyawan
@@ -543,6 +552,13 @@ router.get("/challenge", validateToken("admin"), karyawanChallengeController.get
  *        description: Add Skill successfully
  */
 router.post("/challenge", validateToken("admin"), challengeValidator, karyawanChallengeController.addKaryawanChallenge);
+
+// ========================================= ASSIGNMENT =========================================
+router.get("/assignment", validateToken("admin"), assignmentController.reportAssignment);
+router.post("/assignment", validateToken("admin"), assignmentValidator, assignmentController.addAssignment);
+router.get("/assignment/:assignmentId", validateToken("admin"), assignmentController.getAssignment);
+router.put("/assignment/:assignmentId", validateToken("admin"), updateAssignmentValidator, assignmentController.updateAssignment);
+router.delete("/assignment/:assignmentId", validateToken("admin"), assignmentController.deleteAssignment);
 
 // ========================================= KARYAWAN =========================================
 /**

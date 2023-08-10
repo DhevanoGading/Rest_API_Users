@@ -13,11 +13,13 @@ module.exports = (sequelize, DataTypes) => {
       },
       createdBy: {
         type: DataTypes.STRING,
+        allowNull: true,
         defaultValue: "arief.dolants",
       },
       timeNow: {
-        type: "DATE",
-        defaultValue: new Date().toISOString().slice(0, 10),
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
       },
     },
     {
@@ -29,7 +31,6 @@ module.exports = (sequelize, DataTypes) => {
     Skill.belongsTo(models.Karyawan, {
       foreignKey: "namaLengkap",
       targetKey: "namaLengkap",
-      onDelete: "SET NULL",
       onUpdate: "CASCADE",
     });
   };
