@@ -316,4 +316,277 @@ module.exports = {
       });
     }
   },
+  async dashboardPmoSdoOther(req, res) {
+    try {
+      const result = await db.sequelize.query(
+        `
+        select 'PMO' divisi, count(1) resource from (  
+          select distinct namaLengkap from (  
+            select distinct b.boardId, b.username,k.namaLengkap, posisi, divisi, k.status from Boardactions b, Karyawans k , TrelloKaryawans tk 
+            where b.username = tk.username  
+            and k.namaLengkap = tk.namaLengkap 
+            and substring(CONVERT_TZ(b.tanggal,'+00:00','+07:00'),1,10) between substring(CURDATE() - INTERVAL 1 MONTH,1,10) AND substring(CURDATE(),1,10) 
+            and boardId in ( 
+              select ps.boardId from ProjectSettings ps, Boards b, Clients c 
+                where upper(status) = 'Active' 
+                and ps.boardId = b.boardId 
+                and ProjectType ='Project' 
+                and projectDiv = 'PMO' 
+                and c.clientId = ps.clientId
+            ) 
+            and k.divisi = 'PMO' 
+            and k.resource = 'PMO'
+          ) Z, ProjectSettings p, Clients c  
+          where posisi != 'Quality Control'  
+          and divisi = 'PMO'  
+          and upper(Z.status) = 'ACTIVE' 
+          and p.clientId = c.clientId  
+          and Z.boardId = p.boardId  
+          order by namaLengkap asc
+        ) S
+        UNION 
+        select 'SDO' divisi, count(1) resource from ( 
+          select distinct k.karyawanId, k.divisi from ( 
+            select XY.boardId, XY.karyawanId, ps.clientId,c.nama, ps.projectDiv from ( 
+              select distinct boardId, karyawanId from AssignmentKaryawans ak where upper(status) = 'ACTIVE'
+            ) XY, ProjectSettings ps, Clients c 
+            where ps.boardId = XY.boardId
+            and ps.projectDiv = 'PMO' 
+            and c.clientId = ps.clientId
+            and upper(ps.status) = 'ACTIVE'
+          ) MMM, Karyawans k, Boards b 
+          where k.karyawanId = MMM.karyawanId 
+          and b.boardId = MMM.boardId
+          and k.divisi = 'SDO' 
+          and k.posisi != 'Quality Control' 
+          and upper(k.status) = 'ACTIVE' 
+        )XY group by divisi
+        UNION 
+        Select 'PMO-OTHER' divisi, count(1) resource  from ( 
+          select namaLengkap, posisi, divisi, status from Karyawans where namaLengkap not in ( 
+            select distinct namaLengkap from ( 
+              select distinct b.boardId, b.username,k.namaLengkap, posisi, divisi, k.status from Boardactions b, Karyawans k , TrelloKaryawans tk 
+              where b.username = tk.username  
+              and k.namaLengkap = tk.namaLengkap 
+              and substring(CONVERT_TZ(b.tanggal,'+00:00','+07:00'),1,10) between substring(CURDATE() - INTERVAL 1 MONTH,1,10) AND substring(CURDATE(),1,10) 
+              and boardId in ( 
+                select ps.boardId  from ProjectSettings ps, Boards b, Clients c 
+                where upper(status) = 'Active' 
+                and ps.boardId = b.boardId 
+                and ProjectType ='Project' 
+                and projectDiv = 'PMO' 
+                and c.clientId = ps.clientId
+              )
+            ) Z, ProjectSettings p, Clients c 
+            where posisi != 'Quality Control' 
+            and divisi = 'PMO' 
+            and upper(Z.status) = 'ACTIVE' 
+            and p.clientId = c.clientId
+            and Z.boardId = p.boardId
+            order by namaLengkap asc
+          ) 
+          and posisi != 'Quality Control' 
+          and divisi = 'PMO' 
+          and resource = 'PMO' 
+          and upper(status) = 'ACTIVE'
+        ) XX
+        UNION 
+        select 'RMO' divisi, count(1) resource from (  
+          select distinct namaLengkap from (  
+            select distinct b.boardId, b.username,k.namaLengkap, posisi, divisi, k.status from Boardactions b, Karyawans k , TrelloKaryawans tk 
+            where b.username = tk.username  
+            and k.namaLengkap = tk.namaLengkap 
+            and substring(CONVERT_TZ(b.tanggal,'+00:00','+07:00'),1,10) between substring(CURDATE() - INTERVAL 1 MONTH,1,10) AND substring(CURDATE(),1,10) 
+            and boardId in ( 
+              select ps.boardId  from ProjectSettings ps, Boards b, Clients c 
+              where upper(status) = 'Active' 
+              and ps.boardId = b.boardId 
+              and ProjectType ='Project' 
+              and projectDiv = 'PMO' 
+              and c.clientId = ps.clientId
+            ) 
+            and k.divisi = 'PMO' 
+            and k.resource = 'RMO' 
+          ) Z, ProjectSettings p, Clients c  
+          where posisi != 'Quality Control'  
+          and divisi = 'PMO'  
+          and upper(Z.status) = 'ACTIVE' 
+          and p.clientId = c.clientId  
+          and Z.boardId = p.boardId 
+          order by namaLengkap asc
+        ) S ;
+        `,
+        {
+          type: QueryTypes.SELECT,
+        }
+      );
+      res.status(200).json({
+        message: "Get Dasboard PMO, SDO, and Other Successfully!",
+        result,
+      });
+    } catch (error) {
+      console.error("Error executing query:", error);
+      res.status(500).json({
+        message: "Error executing query",
+        error: error.message,
+      });
+    }
+  },
+  async dasboardPmoChart(req, res) {
+    try {
+      const result = await db.sequelize.query(
+        `
+        select Clients, resource from ( 
+          select nama Clients, count(1) resource from ( 
+            select distinct namaLengkap, nama from ( 
+              select distinct b.boardId, b.username,k.namaLengkap, posisi, divisi, k.status from Boardactions b, Karyawans k , TrelloKaryawans tk 
+              where b.username = tk.username  
+              and k.namaLengkap = tk.namaLengkap  
+              and k.resource = 'PMO' 
+              and substring(CONVERT_TZ(b.tanggal,'+00:00','+07:00'),1,10) between substring(CURDATE() - INTERVAL 1 MONTH,1,10) AND substring(CURDATE(),1,10) 
+              and boardId in ( 
+                select ps.boardId  from ProjectSettings ps, Boards b, Clients c 
+                where upper(status) = 'Active' 
+                and ps.boardId = b.boardId 
+                and projectType ='Project' 
+                and projectDiv != 'SDO' 
+                and c.clientId = ps.clientId
+              ) 
+            ) Z, ProjectSettings p, Clients c 
+            where posisi != 'Quality Control' 
+            and divisi = 'PMO' 
+            and upper(Z.status) = 'ACTIVE' 
+            and p.clientId = c.clientId 
+            and Z.boardId = p.boardId
+          ) CC 
+          group by nama 
+        ) BB
+        UNION  
+        Select 'Others', count(1) resource  from ( 
+          select namaLengkap, posisi, divisi, status from Karyawans where namaLengkap not in ( 
+            select distinct namaLengkap from ( 
+              select distinct b.boardId, b.username,k.namaLengkap, posisi, divisi, k.status from Boardactions b, Karyawans k , TrelloKaryawans tk 
+              where b.username = tk.username 
+              and k.namaLengkap = tk.namaLengkap 
+              and substring(CONVERT_TZ(b.tanggal,'+00:00','+07:00'),1,10) between substring(CURDATE() - INTERVAL 1 MONTH,1,10) AND substring(CURDATE(),1,10) 
+              and boardId in ( 
+                select ps.boardId  from ProjectSettings ps, Boards b, Clients c 
+                where upper(status) = 'Active' 
+                and ps.boardId = b.boardId 
+                and projectType ='Project' 
+                and projectDiv != 'SDO' 
+                and c.clientId = ps.clientId
+              ) 
+            ) Z, ProjectSettings p, Clients c 
+            where posisi != 'Quality Control' 
+            and divisi = 'PMO' 
+            and upper(Z.status) = 'ACTIVE' 
+            and p.clientId = c.clientId  
+            and Z.boardId = p.boardId
+            order by namaLengkap asc
+          ) 
+          and posisi != 'Quality Control' 
+          and divisi = 'PMO' 
+          and resource = 'PMO' 
+          and upper(status) = 'ACTIVE'
+        ) XX;
+        `,
+        {
+          type: QueryTypes.SELECT,
+        }
+      );
+      res.status(200).json({
+        message: "Get Dasboard PMO Chart Successfully!",
+        result,
+      });
+    } catch (error) {
+      console.error("Error executing query:", error);
+      res.status(500).json({
+        message: "Error executing query",
+        error: error.message,
+      });
+    }
+  },
+  async dashboardPmoPercent(req, res) {
+    try {
+      const result = await db.sequelize.query(
+        `
+        select * from (
+          select nama Clients, 
+          COUNT(CASE WHEN resource = 'PMO' THEN 1 END) AS 'pmo', 
+          COUNT(CASE WHEN resource = 'RMO' THEN 1 END) AS 'rmo' 
+          from (  
+            select distinct namaLengkap, nama,resource  from (  
+              select distinct b.boardId, b.username,k.namaLengkap, posisi, k.resource, divisi, k.status from Boardactions b, Karyawans k , TrelloKaryawans tk 
+              where b.username = tk.username  
+              and k.namaLengkap = tk.namaLengkap 
+              and substring(CONVERT_TZ(b.tanggal,'+00:00','+07:00'),1,10) between substring(CURDATE() - INTERVAL 1 MONTH,1,10) AND substring(CURDATE(),1,10) 
+              and boardId in (  
+                select ps.boardId  from ProjectSettings ps, Boards b, Clients c 
+                where upper(status) = 'ACTIVE' 
+                and ps.boardId = b.boardId 
+                and ProjectType ='Project' 
+                and projectDiv != 'SDO' 
+                and c.clientId = ps.clientId
+              ) 
+            ) Z, ProjectSettings p, Clients c 
+            where posisi != 'Quality Control' 
+            and divisi = 'PMO' 
+            and Z.namaLengkap != 'Admin Trello' 
+            and upper(Z.status) = 'ACTIVE' 
+            and p.clientId = c.clientId  
+            and Z.boardId = p.boardId 
+          ) CC 
+          group by nama 
+          UNION 
+          Select 'Others', 
+          COUNT(CASE WHEN resource = 'PMO' THEN 1 END) AS 'pmo', 
+          COUNT(CASE WHEN resource = 'RMO' THEN 1 END) AS 'rmo' 
+          from ( 
+            select namaLengkap, posisi, divisi, resource from Karyawans where namaLengkap not in ( 
+              select distinct namaLengkap from ( 
+                select distinct b.boardId, b.username,k.namaLengkap, posisi, divisi, k.status from Boardactions b, Karyawans k , TrelloKaryawans tk 
+                where b.username = tk.username 
+                and k.namaLengkap = tk.namaLengkap 
+                and substring(CONVERT_TZ(b.tanggal,'+00:00','+07:00'),1,10) between substring(CURDATE() - INTERVAL 1 MONTH,1,10) AND substring(CURDATE(),1,10) 
+                and boardId in ( 
+                  select ps.boardId  from ProjectSettings ps, Boards b, Clients c 
+                  where upper(status) = 'ACTIVE' 
+                  and ps.boardId = b.boardId 
+                  and ProjectType ='Project' 
+                  and projectDiv != 'SDO' 
+                  and c.clientId = ps.clientId
+                ) 
+              ) Z, ProjectSettings p, Clients c 
+              where posisi != 'Quality Control' 
+              and divisi = 'PMO' 
+              and Z.namaLengkap != 'Admin Trello' 
+              and upper(Z.status) = 'ACTIVE' 
+              and p.clientId = c.clientId 
+              and Z.boardId = p.boardId
+              order by namaLengkap asc
+            ) 
+            and posisi != 'Quality Control' 
+            and divisi = 'PMO' 
+            and namaLengkap != 'Admin Trello' 
+            and upper(status) = 'ACTIVE'
+          ) XX
+        ) ZZ;
+        `,
+        {
+          type: QueryTypes.SELECT,
+        }
+      );
+      res.status(200).json({
+        message: "Get Dasboard PMO Percent Successfully!",
+        result,
+      });
+    } catch (error) {
+      console.error("Error executing query:", error);
+      res.status(500).json({
+        message: "Error executing query",
+        error: error.message,
+      });
+    }
+  },
 };

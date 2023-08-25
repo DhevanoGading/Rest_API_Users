@@ -19,6 +19,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       timestamps: false,
+      indexes: [
+        {
+          fields: ["username"],
+        },
+      ],
     }
   );
 
@@ -28,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
       targetKey: "namaLengkap",
       onDelete: "SET NULL",
       onUpdate: "CASCADE",
+    });
+    TrelloKaryawan.hasMany(models.Boardaction, {
+      foreignKey: "username",
+      targetKey: "username",
     });
   };
 

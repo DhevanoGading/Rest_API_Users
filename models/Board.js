@@ -46,6 +46,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "boardId",
       targetKey: "boardId",
     });
+    Board.hasMany(models.Boardaction, {
+      foreignKey: "boardId",
+      targetKey: "boardId",
+    });
   };
 
   return Board;
